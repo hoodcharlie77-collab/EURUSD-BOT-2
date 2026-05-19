@@ -931,3 +931,97 @@ Rule note:
 - Fourth shorter-box validation across late-2024 months.
 - The shorter cap is doing useful work: it keeps boxes focused without losing valid compression shelves.
 - Next samples should move to older-year validation, starting with 2023, to test whether the rule is evergreen beyond 2024.
+
+## Blind Training Sample 039 - 2023-03-23 01:25 EST Start
+
+Settings:
+- EURUSD 5-minute candles.
+- `BB(5, 4 std)`.
+- New York time.
+- Future hidden after Box 2.
+- Mixed blind selection with duplicate-window guard.
+- Older-year validation sample: March 2023.
+- Shorter candidate pass: max 12 bars / 60 minutes.
+
+Original model boxes:
+- Box 1: 01:25-02:10 EST, aspect 5.75, range 8.7 pips.
+- Box 2: 06:45-07:35 EST, aspect 5.00, range 11.0 pips.
+
+User feedback:
+- Box 1 is correct.
+- Box 2 is correct.
+- Model missed two additional compression shelves.
+- My first missed-box guess at 02:40-02:55 EST was wrong. It chased the shelf too close to the upside spike/high churn.
+- My lower-shelf guess at 05:35-06:00 EST was correct.
+- The other missed box was between those two guesses: 03:55-04:15 EST.
+- User confirmed the corrected four-box chart is all correct.
+
+Corrected additional boxes:
+- Corrected Box 3: 03:55-04:15 EST, aspect 2.25, range 11.1 pips, progress 0.9 pips, travel ratio 0.45, median BB width 9.14 pips.
+- Corrected Box 4: 05:35-06:00 EST, aspect 3.57, range 8.4 pips, progress 6.6 pips, travel ratio 1.37, median BB width 16.80 pips.
+
+Rule note:
+- This is a recall failure, not a precision-only problem. The detector found good boxes but did not find all visually important compression shelves.
+- The wrong 02:40-02:55 EST box was too soon after expansion and sat in high-area churn. Reject shelves that are still part of the spike aftermath.
+- The accepted 03:55-04:15 EST box is short and fails the current hard aspect floor, but visually it is a clean shelf: tiny net progress, low internal travel, and BB width contraction directly before another push.
+- Do not overfit this into a complicated exception. The robust rule is: after expansion/churn, wait for the market to calm into a contained shelf; a short shelf can count if it has very low progress/travel and obvious BB contraction.
+
+## Blind Training Sample 040 - 2023-06-08 08:35 EST Start
+
+Settings:
+- EURUSD 5-minute candles.
+- `BB(5, 4 std)`.
+- New York time.
+- Future hidden after Box 2.
+- Mixed blind selection with duplicate-window guard.
+- Older-year validation sample: June 2023.
+- Shorter candidate pass: max 12 bars / 60 minutes.
+
+Model boxes:
+- Box 1: 12:20-13:15 EST, aspect 7.89, range 7.6 pips.
+- Box 2: 13:45-14:40 EST, aspect 12.50, range 4.8 pips.
+
+User feedback:
+- Box 1 is correct.
+- Box 2 is correct.
+
+Rule note:
+- This sample validates compression late in a slow grind-up day, before the excluded late-NY window.
+- A clean shelf near the top of a move is acceptable when candles remain contained and BB width stays compressed/low.
+- The very narrow Box 2 reinforces that quiet, low-width shelves are valid even when there is not much immediate dramatic context visible.
+
+## Blind Training Sample 041 - 2023-09-28 06:35 EST Start
+
+Settings:
+- EURUSD 5-minute candles.
+- `BB(5, 4 std)`.
+- New York time.
+- Future hidden after Box 2.
+- Mixed blind selection with duplicate-window guard.
+- Older-year validation sample: September 2023.
+- Shorter candidate pass: max 12 bars / 60 minutes.
+
+Model boxes:
+- Box 1: 07:05-08:00 EST, aspect 4.84, range 12.4 pips.
+- Box 2: 13:30-14:10 EST, aspect 5.17, range 8.7 pips.
+
+User feedback:
+- Box 1 is correct.
+- Box 2 is correct.
+
+Rule note:
+- Third 2023 validation sample passed.
+- Box 1 is a lower-aspect but still correct compression: flat enough, contained enough, and directly before a violent expansion/headfake sequence.
+- Box 2 is a clean late-window shelf after a larger trend sequence. The compression logic is still holding in a different year and volatility regime.
+
+## 2023 Validation Checkpoint
+
+Status:
+- Sample 039: final corrected set accepted after recall correction.
+- Sample 040: both boxes accepted.
+- Sample 041: both boxes accepted.
+
+Learning:
+- The current rules are not merely fitted to 2024. They survived March, June, and September 2023.
+- Main weakness is recall around short shelves after volatility settles. The model can miss valid compressions when the hard aspect threshold is too strict.
+- Keep the rule simple: contained shelf, low net progress/travel, BB width low or contracting, and no obvious spike-aftershock churn.

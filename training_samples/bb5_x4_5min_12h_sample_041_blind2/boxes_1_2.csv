@@ -1,0 +1,3 @@
+box,start_new_york,end_new_york,low,high,bars,duration_min,range_pips,aspect_min_per_pip,progress_pips,travel_ratio,bb_width_median,score
+1,2023-09-28 07:05 EST,2023-09-28 08:00 EST,1.0536,1.05484,12,60,12.4,4.84,3.4,1.44,11.61,8.83
+2,2023-09-28 13:30 EST,2023-09-28 14:10 EST,1.05499,1.05586,9,45,8.7,5.17,1.0,1.61,20.84,8.47
