@@ -1,0 +1,2 @@
+sample,start_utc,end_utc,start_new_york,end_new_york,timeframe,bb_period,std_mult,excluded_late_ny,candles,bb_width_q1_pips,bb_width_median_pips,bb_width_q3_pips
+007,2024-02-09 06:00:00+00:00,2024-02-09 18:00:00+00:00,2024-02-09 01:00 EST,2024-02-09 13:00 EST,5min,5,4,15:00-17:00 America/New_York,144,8.41,11.1,15.3

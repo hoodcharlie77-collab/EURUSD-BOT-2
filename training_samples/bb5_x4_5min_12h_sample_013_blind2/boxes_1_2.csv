@@ -1,0 +1,3 @@
+box,start_new_york,end_new_york,low,high,bars,duration_min,range_pips,aspect_min_per_pip,progress_pips,travel_ratio,bb_width_median,score
+1,2024-02-15 04:30 EST,2024-02-15 05:45 EST,1.07308,1.0737,16,80,6.2,12.9,1.2,2.77,8.93,15.42
+2,2024-02-15 06:05 EST,2024-02-15 07:20 EST,1.07338,1.07406,16,80,6.8,11.76,1.1,1.4,5.81,16.2

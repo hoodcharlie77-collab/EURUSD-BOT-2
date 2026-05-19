@@ -1,0 +1,2 @@
+sample,start_utc,end_utc,start_new_york,hidden_after_new_york,visible_candles,full_12h_candles
+030_blind2,2024-04-30 04:05:00+00:00,2024-04-30 16:05:00+00:00,2024-04-30 00:05 EST,2024-04-30 04:05 EST,49,144

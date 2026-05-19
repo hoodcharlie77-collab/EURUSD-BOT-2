@@ -1,0 +1,2 @@
+sample,start,end,timeframe,bb_period,std_mult,candles,bb_width_q1_pips,bb_width_median_pips,bb_width_q3_pips
+002,2024-02-29 10:05:00+00:00,2024-02-29 22:05:00+00:00,5min,5,4,144,8.49,14.95,19.35

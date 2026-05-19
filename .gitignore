@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+
+# Raw minute data is large and should stay local unless explicitly versioned elsewhere.
+EURUSD_*.csv
+
+# Local/browser temp artifacts.
+*.tmp
+*.log
