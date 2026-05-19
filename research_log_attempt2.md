@@ -854,3 +854,80 @@ Rule note:
 - First shorter-box pass is accepted. Compression boxes do not need to be 75-80 minutes.
 - Aspect around 7.5 is still acceptable when the box is short, contained, and visually clean.
 - Continue with shorter boxes to avoid swallowing nearby structure.
+
+## Blind Training Sample 036 - 2024-10-03 22:50 EST Start
+
+Settings:
+- EURUSD 5-minute candles.
+- `BB(5, 4 std)`.
+- New York time.
+- Future hidden after Box 2.
+- Mixed blind selection with duplicate-window guard.
+- Generalization sample: October 2024.
+- Shorter candidate pass: max 12 bars / 60 minutes.
+
+Model boxes:
+- Box 1: 23:55-00:50 EST, aspect 13.04, range 4.6 pips.
+- Box 2: 05:55-06:30 EST, aspect 9.52, range 4.2 pips.
+
+User feedback:
+- Box 1 is correct.
+- Box 2 is correct.
+- User note: Git does not need to update every sample; batch every three samples to save time.
+
+Rule note:
+- October sample validates the shorter-box pass again.
+- A 40-minute compression can be valid when it is clean and does not swallow too much surrounding structure.
+
+## Git Logging Cadence
+
+Protocol update:
+- Continue logging each reviewed sample locally immediately.
+- Push to GitHub in batches, roughly every three reviewed samples, unless a major rule change or code change needs immediate preservation.
+
+## Blind Training Sample 037 - 2024-11-14 18:05 EST Start
+
+Settings:
+- EURUSD 5-minute candles.
+- `BB(5, 4 std)`.
+- New York time.
+- Future hidden after Box 2.
+- Mixed blind selection with duplicate-window guard.
+- Generalization sample: November 2024.
+- Shorter candidate pass: max 12 bars / 60 minutes.
+
+Model boxes:
+- Box 1: 21:55-22:45 EST, aspect 10.19, range 5.4 pips.
+- Box 2: 23:40-00:35 EST, aspect 12.77, range 4.7 pips.
+
+User feedback:
+- Box 1 is correct.
+- Box 2 is correct.
+
+Rule note:
+- Second shorter-box validation after September/October. Shorter boxes are working better and reduce over-selection.
+- Compression can still be valid with mild drift if the internal candles remain contained and the volatility context is calm enough.
+
+## Blind Training Sample 038 - 2024-12-24 00:35 EST Start
+
+Settings:
+- EURUSD 5-minute candles.
+- `BB(5, 4 std)`.
+- New York time.
+- Future hidden after Box 2.
+- Mixed blind selection with duplicate-window guard.
+- Generalization sample: December 2024.
+- Shorter candidate pass: max 12 bars / 60 minutes.
+
+Model boxes:
+- Box 1: 01:30-02:25 EST, aspect 11.32, range 5.3 pips.
+- Box 2: 04:55-05:50 EST, aspect 8.11, range 7.4 pips.
+
+User feedback:
+- Box 1 is correct.
+- Box 2 is correct.
+
+Rule note:
+- Fourth shorter-box validation across late-2024 months.
+- The shorter cap is doing useful work: it keeps boxes focused without losing valid compression shelves.
+- Next samples should move to older-year validation, starting with 2023, to test whether the rule is evergreen beyond 2024.
