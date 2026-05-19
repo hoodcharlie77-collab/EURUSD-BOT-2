@@ -160,6 +160,21 @@ def choose_boxes(
                 if is_separate(box, picked):
                     picked.append(box)
                     break
+    elif selection_mode == "borderline":
+        # Pull from lower-ranked candidates to pressure-test marginal shelves.
+        # This keeps the same hard candidate constraints but avoids only
+        # showing the cleanest boxes.
+        bands = [
+            ranked[35:120] or ranked[15:70] or ranked[:40],
+            ranked[120:260] or ranked[50:160] or ranked[20:100] or ranked[:60],
+        ]
+        for band in bands:
+            shuffled = list(band)
+            rng.shuffle(shuffled)
+            for box in shuffled:
+                if is_separate(box, picked):
+                    picked.append(box)
+                    break
 
     for box in ranked:
         if is_separate(box, picked):
@@ -469,9 +484,9 @@ def main() -> None:
     )
     parser.add_argument(
         "--selection-mode",
-        choices=["best", "mixed"],
+        choices=["best", "mixed", "borderline"],
         default="mixed",
-        help="best picks the top boxes; mixed adds one mid-ranked candidate for blind training variety",
+        help="best picks the top boxes; mixed adds one mid-ranked candidate; borderline samples lower-ranked valid candidates",
     )
     args = parser.parse_args()
 

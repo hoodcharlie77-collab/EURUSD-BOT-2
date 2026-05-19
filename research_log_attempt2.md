@@ -1197,3 +1197,50 @@ Learning:
 - The proportional/contextual approach is holding. Fixed pip width alone would be wrong because each year/regime has different normal volatility.
 - Strong/clean compression examples are now well-covered.
 - Next training should emphasize borderline and trap cases: post-spike churn, shelves with too much internal travel, and boxes that look rectangular numerically but do not visually settle.
+
+## Blind Training Sample 048 - 2024-03-04 09:00 EST Start
+
+Settings:
+- EURUSD 5-minute candles.
+- `BB(5, 4 std)`.
+- New York time.
+- Future hidden after Box 2.
+- Borderline-style selection: same BB/candidate constraints, but lower-ranked candidates selected to pressure-test gray areas.
+- Shorter candidate pass: max 12 bars / 60 minutes.
+
+Model boxes:
+- Box 1: 10:20-10:55 EST, aspect 7.02, range 5.7 pips.
+- Box 2: 12:45-13:35 EST, aspect 11.46, range 4.8 pips.
+
+User feedback:
+- Box 1 is correct.
+- Box 2 is correct.
+
+Rule note:
+- Borderline-style sample still passed.
+- Box 1 is a compact shelf after an upside push. It is valid because progress/travel are very low and candles are visually contained.
+- Box 2 is a quiet low-width shelf after a drift/chop sequence. It is valid because the final rectangle is clean even though surrounding price action is not dramatic.
+- The gray-area test did not break the simple compression definition.
+
+## Compression v0.1 Visual Rule
+
+Current working definition:
+- Use EURUSD 5-minute candles with `BB(5, 4 std)` for this training phase.
+- Compression is a visually contained shelf/rectangle, usually 6-12 candles / 30-60 minutes.
+- The box should be horizontally biased. Square blobs are weak. Long or medium rectangles are acceptable.
+- Range must be judged proportionally to local volatility. Fixed pip width is not robust across 2021-2025 regimes.
+- Net progress inside the box should be small. Internal travel can exist, but if it reads as churn instead of containment, downgrade it.
+- BB width is context, not the whole signal. Low or contracting BB width strengthens the box; wide BB can still be acceptable if the box is proportionally contained in a high-volatility regime.
+- Reject or downgrade shelves that are still part of immediate spike-aftershock churn. Wait until price actually settles.
+- Compression can appear before expansion or after an expansion pause. The first breakout can headfake; the important effect is that compression is usually near a higher-expansion period.
+
+Confidence tiers:
+- Strong compression: clean rectangle, low progress/travel, BB width low or contracting, no obvious spike-aftershock churn.
+- Marginal compression: rectangular enough but visually choppier, immediately after volatility, or less settled. It may be usable only with stronger expansion confirmation later.
+- Reject: square/non-horizontal area, excessive internal churn, clear directional drift masquerading as a shelf, or a pause that is still part of the spike itself.
+
+Training conclusion:
+- The compression rule has now held across 2021, 2022, 2023, 2024, and 2025 samples.
+- The largest model risk is recall: missing short clean shelves after volatility settles.
+- The largest trading risk is overaccepting marginal shelves without requiring expansion confirmation.
+- Next logical phase: define expansion/headfake confirmation after compression, instead of adding more compression filters.
