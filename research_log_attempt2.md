@@ -830,3 +830,27 @@ Rule note:
 - Box 2 was too stretched. It captured a small transition/mini-cycle rather than a cleaner shorter shelf.
 - Do not force compression boxes to use the maximum available duration.
 - Next pass should cap candidate boxes closer to 60 minutes so the detector can mark the clean shelf without swallowing nearby structure.
+
+## Blind Training Sample 035 - 2024-09-19 08:20 EST Start
+
+Settings:
+- EURUSD 5-minute candles.
+- `BB(5, 4 std)`.
+- New York time.
+- Future hidden after Box 2.
+- Mixed blind selection with duplicate-window guard.
+- Generalization sample: September 2024.
+- Shorter candidate pass: max 12 bars / 60 minutes.
+
+Model boxes:
+- Box 1: 12:50-13:45 EST, aspect 7.50, range 8.0 pips.
+- Box 2: 14:05-14:50 EST, aspect 7.46, range 6.7 pips.
+
+User feedback:
+- Box 1 is correct.
+- Box 2 is correct.
+
+Rule note:
+- First shorter-box pass is accepted. Compression boxes do not need to be 75-80 minutes.
+- Aspect around 7.5 is still acceptable when the box is short, contained, and visually clean.
+- Continue with shorter boxes to avoid swallowing nearby structure.
