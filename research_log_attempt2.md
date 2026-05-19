@@ -806,3 +806,27 @@ Rule note:
 - First July sample supports generalization after the June miss.
 - Both boxes were accepted despite Box 2 having some drift; the visual shelf remained contained and quiet enough.
 - Keep rejecting noisy pauses, but do not reject mild drift inside a clean shelf.
+
+## Blind Training Sample 034 - 2024-08-13 21:55 EST Start
+
+Settings:
+- EURUSD 5-minute candles.
+- `BB(5, 4 std)`.
+- New York time.
+- Future hidden after Box 2.
+- Mixed blind selection with duplicate-window guard.
+- Generalization sample: August 2024.
+
+Model boxes:
+- Box 1: 23:10-00:25 EST, aspect 19.05, range 4.2 pips.
+- Box 2: 00:45-01:45 EST, aspect 14.77, range 4.4 pips.
+
+User feedback:
+- Box 1 is correct.
+- Box 2 is wrong.
+- User note: boxes can be shorter; reducing candle count inside the box is okay.
+
+Rule note:
+- Box 2 was too stretched. It captured a small transition/mini-cycle rather than a cleaner shorter shelf.
+- Do not force compression boxes to use the maximum available duration.
+- Next pass should cap candidate boxes closer to 60 minutes so the detector can mark the clean shelf without swallowing nearby structure.
