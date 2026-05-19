@@ -738,3 +738,25 @@ Rule note:
 - Second April sample supports generalization.
 - A wider 9-10 pip box can still be valid when it follows/contains the compression shelf cleanly and net progress is small.
 - Keep the detector simple: no hard pip-width cutoff yet; width must be judged relative to context and shelf quality.
+
+## Blind Training Sample 031 - 2024-05-15 21:40 EST Start
+
+Settings:
+- EURUSD 5-minute candles.
+- `BB(5, 4 std)`.
+- New York time.
+- Future hidden after Box 2.
+- Mixed blind selection with duplicate-window guard.
+- Generalization sample: May 2024.
+
+Model boxes:
+- Box 1: 23:10-00:25 EST, aspect 15.09, range 5.3 pips.
+- Box 2: 02:15-03:15 EST, aspect 11.61, range 5.6 pips.
+
+User feedback:
+- Box 1 is correct.
+- Box 2 is correct.
+
+Rule note:
+- First May sample supports generalization beyond February/March/April.
+- Both boxes fit the compact rule: clean shelf, contained range, minimal progress, and quiet enough BB context.
