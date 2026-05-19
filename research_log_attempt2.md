@@ -783,3 +783,26 @@ Rule note:
 - Box 2 reinforces the noisy-pause rejection: it came after sharper movement with elevated BB width and did not read like a quiet shelf.
 - Do not label post-expansion volatility as compression just because price is temporarily bounded.
 - Keep this as a broad rule, not a custom filter: valid compression needs contained candles plus a visibly calmer volatility state.
+
+## Blind Training Sample 033 - 2024-07-29 20:20 EST Start
+
+Settings:
+- EURUSD 5-minute candles.
+- `BB(5, 4 std)`.
+- New York time.
+- Future hidden after Box 2.
+- Mixed blind selection with duplicate-window guard.
+- Generalization sample: July 2024.
+
+Model boxes:
+- Box 1: 21:35-22:45 EST, aspect 17.86, range 4.2 pips.
+- Box 2: 00:40-01:50 EST, aspect 15.00, range 5.0 pips.
+
+User feedback:
+- Box 1 is correct.
+- Box 2 is correct.
+
+Rule note:
+- First July sample supports generalization after the June miss.
+- Both boxes were accepted despite Box 2 having some drift; the visual shelf remained contained and quiet enough.
+- Keep rejecting noisy pauses, but do not reject mild drift inside a clean shelf.
