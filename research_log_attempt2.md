@@ -760,3 +760,26 @@ User feedback:
 Rule note:
 - First May sample supports generalization beyond February/March/April.
 - Both boxes fit the compact rule: clean shelf, contained range, minimal progress, and quiet enough BB context.
+
+## Blind Training Sample 032 - 2024-06-10 23:40 EST Start
+
+Settings:
+- EURUSD 5-minute candles.
+- `BB(5, 4 std)`.
+- New York time.
+- Future hidden after Box 2.
+- Mixed blind selection with duplicate-window guard.
+- Generalization sample: June 2024.
+
+Model boxes:
+- Box 1: 00:50-02:05 EST, aspect 14.04, range 5.7 pips.
+- Box 2: 03:15-04:10 EST, aspect 7.69, range 7.8 pips.
+
+User feedback:
+- Box 1 is correct.
+- Box 2 is wrong.
+
+Rule note:
+- Box 2 reinforces the noisy-pause rejection: it came after sharper movement with elevated BB width and did not read like a quiet shelf.
+- Do not label post-expansion volatility as compression just because price is temporarily bounded.
+- Keep this as a broad rule, not a custom filter: valid compression needs contained candles plus a visibly calmer volatility state.
