@@ -1110,3 +1110,90 @@ Learning:
 - The core compression definition continued to hold forward in 2025.
 - The weak spot is not the clean shelf. The weak spot is deciding whether a post-volatility pause has settled enough to count.
 - Next phase should deliberately include borderline/trap samples so the rule learns when to downgrade marginal shelves rather than force a yes/no.
+
+## Blind Training Sample 045 - 2022-04-25 17:30 EST Start
+
+Settings:
+- EURUSD 5-minute candles.
+- `BB(5, 4 std)`.
+- New York time.
+- Future hidden after Box 2.
+- Mixed blind selection with duplicate-window guard.
+- Older high-volatility regime sample: April 2022.
+- Shorter candidate pass: max 12 bars / 60 minutes.
+
+Model boxes:
+- Box 1: 17:55-18:50 EST, aspect 11.54, range 5.2 pips.
+- Box 2: 23:05-00:00 EST, aspect 8.00, range 7.5 pips.
+
+User feedback:
+- Box 1 is correct.
+- Box 2 is correct.
+
+Rule note:
+- First 2022 stress sample passed.
+- Box 1 is a very low-width shelf before the larger upside expansion sequence.
+- Box 2 is a later compression shelf near the top of the move. It remains valid because price stays contained and BB width is controlled, even though the preceding regime has already expanded.
+- This supports the core idea: compression can appear before or after expansion; the compression effect is the key condition, not a guaranteed first breakout direction.
+
+## Blind Training Sample 046 - 2022-09-21 19:30 EST Start
+
+Settings:
+- EURUSD 5-minute candles.
+- `BB(5, 4 std)`.
+- New York time.
+- Future hidden after Box 2.
+- Mixed blind selection with duplicate-window guard.
+- Older high-volatility regime sample: September 2022.
+- Shorter candidate pass: max 12 bars / 60 minutes.
+
+Model boxes:
+- Box 1: 21:40-22:35 EST, aspect 5.13, range 11.7 pips.
+- Box 2: 00:20-00:45 EST, aspect 5.08, range 5.9 pips.
+
+User feedback:
+- Box 1 is correct.
+- Box 2 is correct.
+
+Rule note:
+- Second 2022 stress sample passed.
+- Box 1 is a broader, lower-quality but still valid shelf after a strong downside move. It is not a tiny low-volatility box; it is a contained pause in a higher-volatility regime.
+- Box 2 is a short clean shelf after later expansion. Very low progress/travel keeps it valid despite the larger surrounding volatility.
+- This reinforces proportional/contextual compression: a valid 2022 box can be wider in pips than a quiet 2024/2025 box, as long as it is visually contained relative to its local regime.
+
+## Blind Training Sample 047 - 2021-06-10 00:35 EST Start
+
+Settings:
+- EURUSD 5-minute candles.
+- `BB(5, 4 std)`.
+- New York time.
+- Future hidden after Box 2.
+- Mixed blind selection with duplicate-window guard.
+- Older-regime sample: June 2021.
+- Shorter candidate pass: max 12 bars / 60 minutes.
+
+Model boxes:
+- Box 1: 01:10-01:50 EST, aspect 10.71, range 4.2 pips.
+- Box 2: 04:45-05:40 EST, aspect 8.00, range 7.5 pips.
+
+User feedback:
+- Box 1 is correct.
+- Box 2 is correct.
+
+Rule note:
+- Third older-regime stress sample passed.
+- Box 1 is a textbook quiet shelf: narrow range, low travel, low BB width, and clear containment before the later larger move.
+- Box 2 is a wider but still contained late shelf after expansion. It has more internal travel, but net progress is tiny and the outline still reads as a rectangle.
+- The compression definition remains stable across 2021, 2022, 2023, 2024, and 2025 samples.
+
+## Older-Regime Stress Checkpoint
+
+Status:
+- Sample 045: both boxes accepted.
+- Sample 046: both boxes accepted.
+- Sample 047: both boxes accepted.
+
+Learning:
+- The proportional/contextual approach is holding. Fixed pip width alone would be wrong because each year/regime has different normal volatility.
+- Strong/clean compression examples are now well-covered.
+- Next training should emphasize borderline and trap cases: post-spike churn, shelves with too much internal travel, and boxes that look rectangular numerically but do not visually settle.

@@ -1,0 +1,2 @@
+sample,start_utc,end_utc,start_new_york,hidden_after_new_york,visible_candles,full_12h_candles
+046_blind2,2022-09-21 23:30:00+00:00,2022-09-22 11:30:00+00:00,2022-09-21 19:30 EST,2022-09-22 00:45 EST,64,144
