@@ -1025,3 +1025,88 @@ Learning:
 - The current rules are not merely fitted to 2024. They survived March, June, and September 2023.
 - Main weakness is recall around short shelves after volatility settles. The model can miss valid compressions when the hard aspect threshold is too strict.
 - Keep the rule simple: contained shelf, low net progress/travel, BB width low or contracting, and no obvious spike-aftershock churn.
+
+## Blind Training Sample 042 - 2025-03-13 01:50 EST Start
+
+Settings:
+- EURUSD 5-minute candles.
+- `BB(5, 4 std)`.
+- New York time.
+- Future hidden after Box 2.
+- Mixed blind selection with duplicate-window guard.
+- Forward-year validation sample: March 2025.
+- Shorter candidate pass: max 12 bars / 60 minutes.
+
+Model boxes:
+- Box 1: 02:05-02:30 EST, aspect 5.00, range 6.0 pips.
+- Box 2: 06:20-06:50 EST, aspect 5.30, range 6.6 pips.
+
+User feedback:
+- Box 1 is correct.
+- Box 2 is correct.
+
+Rule note:
+- First 2025 validation sample passed.
+- Both boxes are shorter shelves, which supports the reduced max-duration direction.
+- Box 1 is a clean early-session shelf before downside follow-through. Box 2 is a later compressed shelf after a volatility fade, with BB width contracting into the box.
+
+## Blind Training Sample 043 - 2025-06-26 00:50 EST Start
+
+Settings:
+- EURUSD 5-minute candles.
+- `BB(5, 4 std)`.
+- New York time.
+- Future hidden after Box 2.
+- Mixed blind selection with duplicate-window guard.
+- Forward-year validation sample: June 2025.
+- Shorter candidate pass: max 12 bars / 60 minutes.
+
+Model boxes:
+- Box 1: 00:50-01:35 EST, aspect 5.38, range 9.3 pips.
+- Box 2: 05:40-06:20 EST, aspect 5.17, range 8.7 pips.
+
+User feedback:
+- Box 1 is correct.
+- Box 2 is correct.
+
+Rule note:
+- Second 2025 validation sample passed.
+- Box 1 is a pre-expansion base before a sustained upside move.
+- Box 2 is a compressed shelf after the trend move and pullback. It is still valid because the candles settle into a contained rectangle and BB width contracts sharply into the box.
+
+## Blind Training Sample 044 - 2025-09-18 11:10 EST Start
+
+Settings:
+- EURUSD 5-minute candles.
+- `BB(5, 4 std)`.
+- New York time.
+- Future hidden after Box 2.
+- Mixed blind selection with duplicate-window guard.
+- Forward-year validation sample: September 2025.
+- Shorter candidate pass: max 12 bars / 60 minutes.
+
+Model boxes:
+- Box 1: 13:00-13:55 EST, aspect 7.14, range 8.4 pips.
+- Box 2: 18:00-18:55 EST, aspect 11.54, range 5.2 pips.
+
+User feedback:
+- Box 1 is maybe.
+- Box 2 is correct.
+
+Rule note:
+- This is the first non-clean 2025 validation result.
+- Box 1 has acceptable numeric compression stats, but visually it is not a clean automatic yes. It follows a volatile spike/rotation area and the shelf is less obvious than the prior accepted examples.
+- Box 2 is a clean, low-width shelf and remains a strong yes.
+- Rule impact: borderline boxes should not be converted into hard rejects or hard accepts too quickly. For trading, this argues for a confidence tier: strong compression versus marginal compression, with marginal boxes requiring stronger expansion confirmation.
+
+## 2025 Validation Checkpoint
+
+Status:
+- Sample 042: both boxes accepted.
+- Sample 043: both boxes accepted.
+- Sample 044: Box 1 maybe, Box 2 accepted.
+
+Learning:
+- The core compression definition continued to hold forward in 2025.
+- The weak spot is not the clean shelf. The weak spot is deciding whether a post-volatility pause has settled enough to count.
+- Next phase should deliberately include borderline/trap samples so the rule learns when to downgrade marginal shelves rather than force a yes/no.

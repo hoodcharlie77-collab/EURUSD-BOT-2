@@ -1,0 +1,3 @@
+box,start_new_york,end_new_york,low,high,bars,duration_min,range_pips,aspect_min_per_pip,progress_pips,travel_ratio,bb_width_median,score
+1,2025-06-26 00:50 EST,2025-06-26 01:35 EST,1.16757,1.1685,10,50,9.3,5.38,0.9,1.49,12.84,10.81
+2,2025-06-26 05:40 EST,2025-06-26 06:20 EST,1.17196,1.17283,9,45,8.7,5.17,3.8,1.43,16.79,9.08
