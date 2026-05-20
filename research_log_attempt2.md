@@ -1907,3 +1907,46 @@ Code status:
 Important:
 - Existing historical CSVs/reports were not rewritten retroactively.
 - Regenerate a chart/report if the timestamp label itself matters.
+
+## Forward Test 001 - 2026 Random 30 Trades With 03:00-06:00 ET Filter
+
+Question:
+- Prior timing breakdown showed `03:00-06:00` New York/Toronto Eastern time was the worst entry block.
+- User asked to apply that filter and forward test another random 30-trade sample.
+
+Test setup:
+- Data: `EURUSD_2026.csv`, January 1 through May 8, 2026.
+- Random seed: `20260520`.
+- Compression detector: current BB(5, 4 std) rule-test box picker.
+- Entry: first 5-minute close breakout beyond compression box.
+- Stop: fixed `10` pips.
+- Target: `1R` from entry, where `1R` is the compression box height.
+- Spread/round-turn cost: `1.2` pips.
+- Same-candle stop/target rule: pessimistic stop first.
+- Count mode: keep collecting random trades until `30` trades remain after excluding `03:00-06:00`.
+
+Results:
+
+| Test | Trades | Target hit | Positive net | Net pips | ROI | Max DD |
+|---|---:|---:|---:|---:|---:|---:|
+| All collected before filter | 34 | 41.2% | 44.1% | -73.6 | -3.63% | 3.74% |
+| Filtered random 30 | 30 | 43.3% | 46.7% | -44.4 | -2.21% | 2.58% |
+| Excluded 03:00-06:00 only | 4 | 25.0% | 25.0% | -29.2 | -1.45% | 1.45% |
+
+Time-block result on all collected trades:
+
+| Time block ET | Positive-net wins | Negative-net losses | Net pips |
+|---|---:|---:|---:|
+| 00:00-03:00 | 4 | 4 | -24.5 |
+| 03:00-06:00 | 1 | 3 | -29.2 |
+| 06:00-09:00 | 1 | 2 | -18.4 |
+| 09:00-12:00 | 0 | 2 | -22.4 |
+| 12:00-15:00 | 2 | 2 | 4.3 |
+| 15:00-17:00 | 0 | 0 | 0.0 |
+| 17:00-24:00 | 7 | 6 | 16.6 |
+
+Interpretation:
+- The `03:00-06:00` filter helped again. It removed `4` trades totaling `-29.2` pips.
+- The filter is useful, but it is not enough. The filtered 30-trade forward sample still lost `-44.4` pips.
+- The cleanest next timing idea is not merely excluding `03:00-06:00`; it is testing whether entries should be restricted toward `17:00-24:00` and possibly `12:00-15:00`, while treating `00:00-12:00` with suspicion.
+- This is still a small sample. Do not curve-fit a final session rule yet.
