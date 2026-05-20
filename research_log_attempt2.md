@@ -1804,6 +1804,45 @@ Interpretation:
 - Raw fixed-unit net pips remain negative across every tested stop size.
 - Stop tweaking is not enough. The signal needs a better entry or a better way to avoid the deep adverse-excursion subset.
 
+## Trade Mechanics Test 005 - Fixed 6/7/10 Pip Stops With 1R Target
+
+Request:
+- Test fixed-pip stops around the prior adverse-excursion read:
+  - `6` pips;
+  - `7` pips;
+  - `10` pips.
+- Keep take profit at `1R`.
+
+Unchanged mechanics:
+- Reviewed compression boxes only.
+- First 5-minute close beyond the box by `0.10R`.
+- Signal must occur within 60 minutes after the box ends.
+- Round-turn spread/transaction cost: `1.2` pips.
+- Same-candle stop and target: stop loss.
+- ROI and max drawdown assume `0.5%` account risk per trade.
+
+Entry-based target results:
+
+| Stop | Signals | Targets | Stops | Time exits | Win rate | Net pips | Sum risk R | ROI | Max DD |
+|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| 6 pips | 29 | 13 | 13 | 3 | 44.8% | -23.7 | -3.951 | -1.99% | 3.04% |
+| 7 pips | 29 | 13 | 12 | 4 | 44.8% | -22.9 | -3.266 | -1.65% | 2.58% |
+| 10 pips | 29 | 16 | 7 | 6 | 55.2% | -0.5 | -0.050 | -0.04% | 2.55% |
+
+Box-extension target results:
+
+| Stop | Signals | Targets | Stops | Time exits | Win rate | Net pips | Sum risk R | ROI | Max DD |
+|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| 6 pips | 29 | 17 | 11 | 1 | 58.6% | -32.6 | -5.435 | -2.71% | 3.39% |
+| 7 pips | 29 | 17 | 10 | 2 | 58.6% | -29.8 | -4.255 | -2.13% | 2.72% |
+| 10 pips | 29 | 20 | 5 | 4 | 69.0% | -7.4 | -0.740 | -0.38% | 2.62% |
+
+Interpretation:
+- `10` pips is clearly better than `6` or `7` pips.
+- The entry-based target with a `10` pip stop is nearly flat, but still negative after spread.
+- Fixed `6` or `7` pips does not survive enough trades.
+- This again points away from breakout-close chasing and toward better entry timing.
+
 ## Stop Requirement Test 001 - Stops Needed To Capture 1R Expansion Wins
 
 Question:
