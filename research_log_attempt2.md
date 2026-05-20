@@ -1749,3 +1749,54 @@ Interpretation:
 Decision:
 - Do not treat the 29 breakout signals as a tradable edge by themselves.
 - Continue testing entry improvement, especially pullback/retest logic, rather than adding more confirmation filters.
+
+## Stop Requirement Test 001 - Stops Needed To Capture 1R Expansion Wins
+
+Question:
+- The expansion audit showed compression 120-minute `1R` hit rate of `75.0%` versus random-control `21.2%`.
+- User asked what stop size is required to capture `50%`, `70%`, and `90%` of those wins.
+
+Clarification:
+- The `75.0%` figure was not a trade win rate.
+- It used non-null forward windows:
+  - reviewed compression boxes: `33`;
+  - usable 120-minute forward windows: `32`;
+  - boxes that hit `1R` within 120 minutes: `24`;
+  - non-null hit rate: `24 / 32 = 75.0%`;
+  - raw all-box hit rate: `24 / 33 = 72.7%`.
+
+Model 1 - box-boundary entry in eventual target direction:
+- For an up `1R` hit, assume entry at the box high.
+- For a down `1R` hit, assume entry at the box low.
+- Direction is the eventual `1R` target direction.
+- Stop required is maximum adverse excursion before target.
+- This directly interrogates the expansion statistic, but it is partly theoretical because direction is known from the eventual winner.
+
+Results:
+
+| Capture goal | Wins measured | Required stop |
+|---:|---:|---:|
+| 50% | 24 | `0.596R` |
+| 70% | 24 | `0.899R` |
+| 90% | 24 | `1.538R` |
+
+Model 2 - first breakout close, same-direction target:
+- Entry is the first close beyond the box by `0.10R`.
+- Target is the same-side box-extension `1R`.
+- Only same-direction target wins are measured.
+- This is closer to a tradable signal.
+
+Results:
+
+| Capture goal | Wins measured | Required stop |
+|---:|---:|---:|
+| 50% | 21 | `0.216R` |
+| 70% | 21 | `0.433R` |
+| 90% | 21 | `1.706R` |
+
+Interpretation:
+- Capturing the easy half of expansion winners requires little room.
+- Capturing 70% is still sub-`1R` in both models.
+- Capturing 90% requires a stop larger than the `1R` target.
+- A `1R` target with a `1.5R+` stop is poor reward/risk before spread.
+- The right direction is not "catch all expansions"; it is to isolate the subset that reaches `1R` without deep adverse excursion.

@@ -1,0 +1,7 @@
+model,wins_measured,capture_goal,required_stop_r,required_stop_pips_at_threshold_case,captured_wins,captured_rate
+box_boundary_in_eventual_target_direction,24,0.5,0.596,3.4,12,0.5
+box_boundary_in_eventual_target_direction,24,0.7,0.899,10.7,17,0.708
+box_boundary_in_eventual_target_direction,24,0.9,1.538,6.0,22,0.917
+first_breakout_close_same_direction_target,21,0.5,0.216,1.6,11,0.524
+first_breakout_close_same_direction_target,21,0.7,0.433,5.2,15,0.714
+first_breakout_close_same_direction_target,21,0.9,1.706,8.7,19,0.905
