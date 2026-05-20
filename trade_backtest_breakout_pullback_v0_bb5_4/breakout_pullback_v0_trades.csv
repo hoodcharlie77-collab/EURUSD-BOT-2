@@ -1,0 +1,34 @@
+sample,box,status,note,box_start_new_york,box_end_new_york,box_range_pips,trade_status
+49,1,accepted,all boxes fine,2022-02-28 19:10 EST,2022-02-28 19:40 EST,5.1,no_signal
+49,2,accepted,all boxes fine,2022-02-28 21:30 EST,2022-02-28 22:00 EST,3.9,no_signal
+49,3,accepted,all boxes fine,2022-02-28 23:20 EST,2022-02-28 23:55 EST,4.8,no_signal
+49,4,accepted,all boxes fine,2022-03-01 00:35 EST,2022-03-01 01:30 EST,7.6,no_signal
+50,1,accepted,all four good,2023-11-29 05:40 EST,2023-11-29 06:25 EST,6.9,no_signal
+50,2,accepted,all four good,2023-11-29 07:25 EST,2023-11-29 08:05 EST,7.4,no_signal
+50,3,accepted,all four good,2023-11-29 11:10 EST,2023-11-29 11:50 EST,8.7,no_signal
+50,4,accepted,all four good,2023-11-29 12:10 EST,2023-11-29 12:40 EST,4.7,no_signal
+51,1,accepted,user said fine,2024-02-07 14:00 EST,2024-02-07 14:55 EST,5.4,no_signal
+51,2,accepted,user said fine,2024-02-07 17:25 EST,2024-02-07 18:10 EST,3.8,no_signal
+51,3,accepted,user said fine,2024-02-07 19:30 EST,2024-02-07 20:25 EST,3.9,no_signal
+51,4,accepted,user said fine,2024-02-07 23:50 EST,2024-02-08 00:20 EST,4.4,no_signal
+52,1,accepted,good,2024-11-26 02:15 EST,2024-11-26 02:40 EST,12.4,no_signal
+52,2,accepted,good,2024-11-26 05:20 EST,2024-11-26 06:15 EST,11.9,no_signal
+52,4,accepted,good,2024-11-26 12:15 EST,2024-11-26 13:10 EST,10.3,no_signal
+53,1,accepted,correct,2025-06-24 22:50 EST,2025-06-24 23:40 EST,5.7,no_signal
+53,2,accepted,correct,2025-06-25 00:15 EST,2025-06-25 01:10 EST,6.1,no_signal
+53,4,accepted,correct,2025-06-25 07:40 EST,2025-06-25 08:20 EST,8.6,no_signal
+54,1,accepted,all correct,2024-02-07 05:40 EST,2024-02-07 06:20 EST,8.5,no_signal
+54,2,accepted,all correct,2024-02-07 06:40 EST,2024-02-07 07:35 EST,8.0,no_signal
+54,3,accepted,all correct,2024-02-07 12:10 EST,2024-02-07 12:55 EST,6.4,no_signal
+54,4,accepted,all correct,2024-02-07 14:00 EST,2024-02-07 14:55 EST,5.4,no_signal
+55,1,questionable,questionable confidence downgrade,2021-09-30 13:40 EST,2021-09-30 14:30 EST,9.0,no_signal
+55,2,accepted,correct,2021-09-30 17:20 EST,2021-09-30 18:15 EST,4.8,no_signal
+55,3,accepted,correct,2021-09-30 19:30 EST,2021-09-30 20:25 EST,7.6,no_signal
+55,4,accepted,correct,2021-09-30 21:55 EST,2021-09-30 22:50 EST,7.6,no_signal
+56,1,accepted,correct,2022-08-28 23:15 EST,2022-08-29 00:10 EST,6.6,no_signal
+56,2,accepted,correct,2022-08-29 00:35 EST,2022-08-29 01:20 EST,6.3,no_signal
+56,3,accepted,missed marginal shelf around 0400,2022-08-29 03:35 EST,2022-08-29 04:05 EST,12.0,no_signal
+57,1,accepted,all correct,2021-12-27 00:35 EST,2021-12-27 01:30 EST,4.1,no_signal
+57,2,accepted,all correct,2021-12-27 01:50 EST,2021-12-27 02:20 EST,4.2,no_signal
+57,3,accepted,all correct,2021-12-27 04:10 EST,2021-12-27 04:50 EST,6.7,no_signal
+57,4,accepted,all correct,2021-12-27 08:10 EST,2021-12-27 09:00 EST,5.3,no_signal

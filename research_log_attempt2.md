@@ -1587,3 +1587,60 @@ Rule decision:
 - If no breakout by 60 minutes, skip the setup.
 - First break direction is useful but not perfect; model must allow headfake logic.
 - Do not add more filters yet. Next test should be trade mechanics: entry on close break, stop logic, time stop, and target handling.
+
+## Trade Mechanics Test 001 - Breakout Band Pullback v0
+
+User-defined mechanics:
+- Enter on pullback after breakout.
+- Breakout sequence: breakout from compression, candle close outside BB band, then pullback to 2 pips outside the band.
+- Entry: limit order.
+- Stop: `1R`.
+- Take profit: `1R`.
+- Round-turn spread/transaction cost: 1.2 pips.
+- Target exit: limit order.
+- Stop exit: market stop.
+- If stop and target both occur in the same candle, count the stop loss.
+
+Implementation assumptions:
+- Compression box remains the same reviewed box.
+- `R` = compression box height.
+- Breakout from compression requires close beyond box by `0.10R`.
+- The breakout-band close is tested separately from compression bands.
+- Pullback entry uses the breakout candle's band value as a fixed limit order:
+  - long entry = breakout upper band + 2 pips;
+  - short entry = breakout lower band - 2 pips.
+- The entry is valid only if it is a real pullback:
+  - long entry must be below the breakout candle close;
+  - short entry must be above the breakout candle close.
+- Entry order expires 120 minutes after compression box end.
+- If filled but neither stop nor target hits by 120 minutes after box end, exit at final close and subtract spread.
+
+Finding 1:
+- Using current compression bands `BB(5, 4 std)` for "close outside BB band" produces zero signals.
+- This is expected. With a 5-bar rolling window and 4 standard deviations, a close outside the band is effectively impossible when the current close is included in the band calculation.
+- Therefore `BB(5, 4 std)` is useful for visual compression context, but not for close-outside-band breakout entry.
+
+Finding 2:
+- Using default/classic `BB(20, 2 std)` for breakout-band confirmation produced:
+  - boxes tested: 33;
+  - breakout-band signals: 27;
+  - filled pullback trades: 3;
+  - targets: 2;
+  - stops: 1;
+  - time exits: 0;
+  - target rate on filled trades: 66.7%;
+  - total net pips after 1.2 pip round-turn cost: -2.9 pips;
+  - average net per filled trade: -0.97 pips.
+
+Interpretation:
+- The rule as stated is too restrictive for this sample.
+- The problem is not the band breakout signal; 27 of 33 boxes produced a `BB(20, 2)` breakout-band signal.
+- The problem is the pullback price. Most breakout closes were not far enough outside the band for "2 pips outside the band" to be a valid non-marketable pullback limit order.
+- Example logic issue: if the upper band is 1.1000 and the breakout closes at 1.1001, a long limit at 1.1002 is above current price, not a pullback.
+
+Decision:
+- Do not treat this as a profitable 1:1 rule.
+- Do not optimize the offset from this tiny sample.
+- Next clean test should clarify whether the intended pullback is:
+  - 2 pips outside the band after a stronger band extension; or
+  - 2 pips inside the band / back toward the band, which is a true pullback order.
