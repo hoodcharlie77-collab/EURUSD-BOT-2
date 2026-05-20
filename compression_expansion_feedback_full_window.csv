@@ -1,0 +1,36 @@
+sample,box,status,note
+49,1,accepted,all boxes fine
+49,2,accepted,all boxes fine
+49,3,accepted,all boxes fine
+49,4,accepted,all boxes fine
+50,1,accepted,all four good
+50,2,accepted,all four good
+50,3,accepted,all four good
+50,4,accepted,all four good
+51,1,accepted,user said fine
+51,2,accepted,user said fine
+51,3,accepted,user said fine
+51,4,accepted,user said fine
+52,1,accepted,good
+52,2,accepted,good
+52,3,rejected,stubby pause inside active directional leg
+52,4,accepted,good
+53,1,accepted,correct
+53,2,accepted,correct
+53,3,rejected,pause inside active upswing
+53,4,accepted,correct
+54,1,accepted,all correct
+54,2,accepted,all correct
+54,3,accepted,all correct
+54,4,accepted,all correct
+55,1,questionable,questionable confidence downgrade
+55,2,accepted,correct
+55,3,accepted,correct
+55,4,accepted,correct
+56,1,accepted,correct
+56,2,accepted,correct
+56,3,accepted,missed marginal shelf around 0400
+57,1,accepted,all correct
+57,2,accepted,all correct
+57,3,accepted,all correct
+57,4,accepted,all correct

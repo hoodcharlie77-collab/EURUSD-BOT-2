@@ -1490,3 +1490,55 @@ Next phase:
 - Define expansion after compression.
 - Explicitly model headfake behavior: first break can fail, then the real expansion can continue the other way.
 - Build entries/exits around compression plus expansion confirmation, not compression alone.
+
+## Expansion Audit 001 - Fixed Forward Windows
+
+Question:
+- A compression is supposed to be followed by expansion. Test whether reviewed compression boxes actually produce more forward expansion than random same-window controls.
+
+Method:
+- Use reviewed full-window rule-test boxes from Samples 049-057.
+- Include accepted and questionable boxes. Exclude rejected boxes.
+- Compare each reviewed compression box against a random same-window control segment with similar duration.
+- Measure fixed forward windows after the box end: 30, 60, 90, and 120 minutes.
+- Use proportional expansion, not fixed pips:
+  - `max_extension_r = max(upside extension, downside extension) / compression box range`.
+  - `realized_range_r = post-window high-low range / compression box range`.
+  - `bb_expand_ratio = max post-window BB width / box median BB width`.
+- Track first close break direction and whether the first break was opposite the dominant 120-minute expansion direction.
+
+First-pass results:
+- Sample size: 33 reviewed compression boxes versus 33 random controls.
+- 60-minute median max extension:
+  - Compression: 1.074R.
+  - Random control: 0.348R.
+- 60-minute 1R hit rate:
+  - Compression: 56.2%.
+  - Random control: 6.1%.
+- 120-minute median max extension:
+  - Compression: 1.642R.
+  - Random control: 0.572R.
+- 120-minute 1R hit rate:
+  - Compression: 75.0%.
+  - Random control: 21.2%.
+- 120-minute 1.5R hit rate:
+  - Compression: 59.4%.
+  - Random control: 6.1%.
+- 120-minute median BB expansion ratio:
+  - Compression: 3.264x.
+  - Random control: 2.058x.
+- First-break headfake rate over 120 minutes:
+  - Compression: 17.2%.
+  - Random control: 3.8%.
+
+Interpretation:
+- Compression boxes are showing materially more forward expansion than random same-window slices.
+- The result supports the compression > expansion premise enough to proceed to expansion logic.
+- Do not call this profitability proof. This is a small visually trained set, and the control is simple.
+- The headfake rate is real enough to matter. First break direction cannot be trusted blindly.
+
+Next rule-development step:
+- Define expansion confirmation after a compression:
+  - basic expansion label: hit at least 1R within 120 minutes;
+  - stronger expansion label: hit at least 1.5R within 120 minutes and BB width expands meaningfully;
+  - headfake handling: first break can be wrong, so entry logic must not assume first close outside the box is the final direction.
