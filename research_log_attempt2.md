@@ -1393,3 +1393,100 @@ Rule note:
 - Full-window test passed cleanly after the short-shelf fix.
 - The accepted boxes include both pre-move shelves and post-volatility compression shelves.
 - No compression-rule change needed from this sample.
+
+## Full 12-Hour Rule Test 055 - 2021-09-30 11:00 EST Start
+
+Format:
+- Full 12-hour window visible.
+- EURUSD 5-minute candles.
+- `BB(5, 4 std)`.
+- New York time.
+- Boxes drawn by Compression v0.1 rules before user review.
+
+Model boxes:
+- Box 1: 13:40-14:30 EST, strong, aspect 6.11, range 9.0 pips.
+- Box 2: 17:20-18:15 EST, strong, aspect 12.50, range 4.8 pips.
+- Box 3: 19:30-20:25 EST, strong, aspect 7.89, range 7.6 pips.
+- Box 4: 21:55-22:50 EST, strong, aspect 7.89, range 7.6 pips.
+
+User feedback:
+- Box 1 is questionable.
+- Box 2 is correct.
+- Box 3 is correct.
+- Box 4 is correct.
+
+Rule note:
+- Box 1 should be treated as a confidence downgrade, not a hard failure.
+- The box is numerically valid but visually rougher: it appears after a sharp move and has more uneven internal candles than the clean shelves.
+- Do not add a new hard filter from this. It supports the existing strong/marginal distinction: shelves after heavier volatility or with messier internal structure should require better expansion confirmation.
+
+## Full 12-Hour Rule Test 056 - 2022-08-28 22:45 EST Start
+
+Format:
+- Full 12-hour window visible.
+- EURUSD 5-minute candles.
+- `BB(5, 4 std)`.
+- New York time.
+- Boxes drawn by Compression v0.1 rules before user review.
+
+Original model boxes:
+- Box 1: 23:15-00:10 EST, strong, aspect 9.09, range 6.6 pips.
+- Box 2: 00:35-01:20 EST, strong, aspect 7.94, range 6.3 pips.
+
+User feedback:
+- Box 1 is correct.
+- Box 2 is correct.
+- User noted a likely missed box around 04:00 EST.
+
+Corrected additional box:
+- Box 3: 03:35-04:05 EST, marginal, aspect 2.92, range 12.0 pips.
+
+Final user feedback:
+- Box 1 is correct.
+- Box 2 is correct.
+- Box 3 is correct.
+
+Rule note:
+- This is a recall miss, not a false positive problem.
+- The added 03:35-04:05 EST box is a short/wider marginal shelf with BB width contraction, followed by a downside headfake and then upside expansion.
+- The base selector missed it because it preferred only two cleaner early shelves in that window.
+- Keep this as a marginal compression class: valid enough to watch, but it should require stronger expansion/headfake confirmation before becoming a trade trigger.
+
+## Full 12-Hour Rule Test 057 - 2021-12-26 23:55 EST Start
+
+Format:
+- Full 12-hour window visible.
+- EURUSD 5-minute candles.
+- `BB(5, 4 std)`.
+- New York time.
+- Boxes drawn by Compression v0.1 rules before user review.
+
+Model boxes:
+- Box 1: 00:35-01:30 EST, strong, aspect 14.63, range 4.1 pips.
+- Box 2: 01:50-02:20 EST, strong, aspect 8.33, range 4.2 pips.
+- Box 3: 04:10-04:50 EST, strong, aspect 6.72, range 6.7 pips.
+- Box 4: 08:10-09:00 EST, strong, aspect 10.38, range 5.3 pips.
+
+User feedback:
+- Box 1 is correct.
+- Box 2 is correct.
+- Box 3 is correct.
+- Box 4 is correct.
+- User note: this is the last compression chart because further samples are now wasting time.
+
+Rule note:
+- Final full-window compression test passed.
+- Stop additional compression-only visual training for now. The detector is aligned enough for the next stage.
+- Next useful work is expansion/headfake confirmation after compression, not more compression box sampling.
+
+## Compression Training Stop Point
+
+Decision:
+- Compression v0.1 is good enough to freeze for now.
+- Do not keep grinding random compression charts unless a later backtest exposes a specific failure mode.
+- Current known issues are acceptable as confidence-tier problems: questionable shelves and marginal short shelves should require stronger expansion confirmation.
+
+Next phase:
+- Define expansion after compression.
+- Explicitly model headfake behavior: first break can fail, then the real expansion can continue the other way.
+- Build entries/exits around compression plus expansion confirmation, not compression alone.

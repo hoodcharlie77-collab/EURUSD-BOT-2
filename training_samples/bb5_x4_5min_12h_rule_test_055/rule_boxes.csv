@@ -1,0 +1,5 @@
+box,tier,start_new_york,end_new_york,bars,duration_min,range_pips,aspect,progress_pips,progress_ratio,travel_ratio,bb_width_median,score
+1,strong,2021-09-30 13:40 EST,2021-09-30 14:30 EST,11,55,9.0,6.11,0.2,0.02,1.93,16.79,10.49
+2,strong,2021-09-30 17:20 EST,2021-09-30 18:15 EST,12,60,4.8,12.5,0.5,0.1,1.29,4.33,18.86
+3,strong,2021-09-30 19:30 EST,2021-09-30 20:25 EST,12,60,7.6,7.89,2.4,0.32,1.0,6.43,13.06
+4,strong,2021-09-30 21:55 EST,2021-09-30 22:50 EST,12,60,7.6,7.89,1.5,0.2,1.87,10.68,12.28

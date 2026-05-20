@@ -1,0 +1,2 @@
+sample,data,start_new_york,end_new_york,local_median_bb_width_pips,local_q25_bb_width_pips,local_q75_bb_width_pips,candidate_count,picked_count
+55,EURUSD_2021.csv,2021-09-30 11:00 EST,2021-09-30 22:55 EST,11.87,7.46,17.47,201,4
