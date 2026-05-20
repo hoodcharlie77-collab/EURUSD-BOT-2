@@ -1542,3 +1542,48 @@ Next rule-development step:
   - basic expansion label: hit at least 1R within 120 minutes;
   - stronger expansion label: hit at least 1.5R within 120 minutes and BB width expands meaningfully;
   - headfake handling: first break can be wrong, so entry logic must not assume first close outside the box is the final direction.
+
+## Breakout Audit 001 - Breakout v0.1
+
+Definition tested:
+- `H` = compression box high.
+- `L` = compression box low.
+- `R` = `H - L`.
+- Up breakout attempt: first 5-minute close above `H + 0.10R`.
+- Down breakout attempt: first 5-minute close below `L - 0.10R`.
+- Use closes only. Ignore wick-only breaks.
+- Basic expansion target: first side to reach `1.0R` beyond the box within 120 minutes after the box ends.
+
+Results on accepted/questionable compression boxes:
+- Total boxes: 33.
+- First close breakout count: 29.
+- First close breakout rate: 87.9%.
+- Median first breakout time: 10 minutes after box end.
+- First breakout timing:
+  - 69.0% of breakouts occurred within 15 minutes.
+  - 93.1% of breakouts occurred within 30 minutes.
+  - 100.0% of breakouts occurred within 60 minutes.
+- First breakout reached some `1.0R` target afterward: 82.8% of first-break cases.
+- Same-direction `1.0R` after first break: 87.5% of target-hit cases.
+- Opposite-direction `1.0R` after first break: 12.5% of target-hit cases.
+- No `1.0R` target after first break: 17.2% of first-break cases.
+- Median first `1.0R` target time: 47.5 minutes after box end.
+
+Breakout outcomes:
+- Break continuation: 21 boxes.
+- Headfake: 3 boxes.
+- Break but no `1.0R`: 5 boxes.
+- No breakout: 4 boxes.
+
+Random-control comparison:
+- Random control first break rate: 78.8%.
+- Random control first break median time: 35 minutes.
+- Random controls reached a `1.0R` target after break only 23.1% of the time.
+- Compression first breaks reached a `1.0R` target after break 82.8% of the time.
+
+Rule decision:
+- Breakout v0.1 is valid enough for first backtest implementation.
+- Breakout attempt must happen within 60 minutes after compression ends.
+- If no breakout by 60 minutes, skip the setup.
+- First break direction is useful but not perfect; model must allow headfake logic.
+- Do not add more filters yet. Next test should be trade mechanics: entry on close break, stop logic, time stop, and target handling.

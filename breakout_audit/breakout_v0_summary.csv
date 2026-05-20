@@ -1,0 +1,3 @@
+label,n_total,n_first_break,first_break_rate,median_first_break_min,n_first_1r_target,first_1r_target_rate_after_break,same_direction_1r_rate_after_break,opposite_direction_1r_rate_after_break,no_1r_target_after_break_rate,median_first_1r_target_min,headfake_rate_vs_dominant_120m
+compression,33,29,0.879,10.0,24,0.828,0.875,0.125,0.172,47.5,0.172
+random_control,33,26,0.788,35.0,6,0.231,1.0,0.0,0.769,90.0,0.038

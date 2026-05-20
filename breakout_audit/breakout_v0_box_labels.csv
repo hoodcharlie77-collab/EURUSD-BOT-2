@@ -1,0 +1,34 @@
+sample,box,status,start_new_york,end_new_york,box_range_pips,first_break_dir,first_break_min,first_1r_target_dir,first_1r_target_min,max_extension_r_120m,bb_expand_ratio_120m,dominant_dir_120m,breakout_result,note
+49,1,accepted,2022-02-28 19:10 EST,2022-02-28 19:40 EST,5.1,down,5.0,down,60.0,2.902,2.682,down,break_continuation,all boxes fine
+49,2,accepted,2022-02-28 21:30 EST,2022-02-28 22:00 EST,3.9,up,5.0,down,60.0,1.128,2.086,down,headfake,all boxes fine
+49,3,accepted,2022-02-28 23:20 EST,2022-02-28 23:55 EST,4.8,up,5.0,up,110.0,1.667,3.241,up,break_continuation,all boxes fine
+49,4,accepted,2022-03-01 00:35 EST,2022-03-01 01:30 EST,7.6,up,10.0,up,30.0,4.211,4.833,up,break_continuation,all boxes fine
+50,1,accepted,2023-11-29 05:40 EST,2023-11-29 06:25 EST,6.9,up,10.0,up,30.0,1.551,2.675,up,break_continuation,all four good
+50,2,accepted,2023-11-29 07:25 EST,2023-11-29 08:05 EST,7.4,down,30.0,down,35.0,2.541,4.311,down,break_continuation,all four good
+50,3,accepted,2023-11-29 11:10 EST,2023-11-29 11:50 EST,8.7,up,15.0,up,70.0,1.701,2.116,up,break_continuation,all four good
+50,4,accepted,2023-11-29 12:10 EST,2023-11-29 12:40 EST,4.7,up,20.0,up,60.0,3.723,5.15,up,break_continuation,all four good
+51,1,accepted,2024-02-07 14:00 EST,2024-02-07 14:55 EST,5.4,,,,,0.0,1.3,,no_break,user said fine
+51,2,accepted,2024-02-07 17:25 EST,2024-02-07 18:10 EST,3.8,up,10.0,,,0.974,1.86,up,break_no_1r,user said fine
+51,3,accepted,2024-02-07 19:30 EST,2024-02-07 20:25 EST,3.9,up,35.0,up,75.0,1.385,3.286,up,break_continuation,user said fine
+51,4,accepted,2024-02-07 23:50 EST,2024-02-08 00:20 EST,4.4,,,,,,,,no_break,user said fine
+52,1,accepted,2024-11-26 02:15 EST,2024-11-26 02:40 EST,12.4,down,30.0,up,80.0,2.718,4.054,up,headfake,good
+52,2,accepted,2024-11-26 05:20 EST,2024-11-26 06:15 EST,11.9,down,5.0,up,60.0,2.008,5.498,up,headfake,good
+52,4,accepted,2024-11-26 12:15 EST,2024-11-26 13:10 EST,10.3,down,15.0,,,0.68,1.958,down,break_no_1r,good
+53,1,accepted,2025-06-24 22:50 EST,2025-06-24 23:40 EST,5.7,down,5.0,down,15.0,1.456,3.364,down,break_continuation,correct
+53,2,accepted,2025-06-25 00:15 EST,2025-06-25 01:10 EST,6.1,down,10.0,down,105.0,1.951,5.234,down,break_continuation,correct
+53,4,accepted,2025-06-25 07:40 EST,2025-06-25 08:20 EST,8.6,down,5.0,,,0.744,2.208,down,break_no_1r,correct
+54,1,accepted,2024-02-07 05:40 EST,2024-02-07 06:20 EST,8.5,up,10.0,,,0.976,1.628,up,break_no_1r,all correct
+54,2,accepted,2024-02-07 06:40 EST,2024-02-07 07:35 EST,8.0,up,25.0,up,50.0,1.238,5.06,up,break_continuation,all correct
+54,3,accepted,2024-02-07 12:10 EST,2024-02-07 12:55 EST,6.4,up,10.0,up,15.0,1.516,2.677,up,break_continuation,all correct
+54,4,accepted,2024-02-07 14:00 EST,2024-02-07 14:55 EST,5.4,,,,,0.0,1.3,,no_break,all correct
+55,1,questionable,2021-09-30 13:40 EST,2021-09-30 14:30 EST,9.0,up,5.0,up,25.0,1.889,1.875,up,break_continuation,questionable confidence downgrade
+55,2,accepted,2021-09-30 17:20 EST,2021-09-30 18:15 EST,4.8,down,55.0,down,90.0,1.938,3.294,down,break_continuation,correct
+55,3,accepted,2021-09-30 19:30 EST,2021-09-30 20:25 EST,7.6,down,20.0,,,0.895,4.038,down,break_no_1r,correct
+55,4,accepted,2021-09-30 21:55 EST,2021-09-30 22:50 EST,7.6,,,,,0.0,0.69,,no_break,correct
+56,1,accepted,2022-08-28 23:15 EST,2022-08-29 00:10 EST,6.6,down,20.0,down,35.0,1.121,5.381,up,break_continuation,correct
+56,2,accepted,2022-08-29 00:35 EST,2022-08-29 01:20 EST,6.3,up,30.0,up,45.0,4.73,3.611,up,break_continuation,correct
+56,3,accepted,2022-08-29 03:35 EST,2022-08-29 04:05 EST,12.0,down,5.0,down,25.0,1.617,3.062,up,break_continuation,missed marginal shelf around 0400
+57,1,accepted,2021-12-27 00:35 EST,2021-12-27 01:30 EST,4.1,up,5.0,up,55.0,4.195,7.654,up,break_continuation,all correct
+57,2,accepted,2021-12-27 01:50 EST,2021-12-27 02:20 EST,4.2,up,5.0,up,15.0,3.333,4.055,up,break_continuation,all correct
+57,3,accepted,2021-12-27 04:10 EST,2021-12-27 04:50 EST,6.7,up,15.0,up,15.0,1.731,3.049,up,break_continuation,all correct
+57,4,accepted,2021-12-27 08:10 EST,2021-12-27 09:00 EST,5.3,up,15.0,up,20.0,3.245,4.389,up,break_continuation,all correct
