@@ -1,0 +1,2 @@
+data,seed,day_start_new_york,day_end_new_york,trades_marked,passes_filter,filtered_entries,pass_net_pips,filtered_net_pips
+EURUSD_2026.csv,20260521,2026-03-11 00:00 EDT,2026-03-12 00:00 EDT,6,4,2,-39.5,-9.0

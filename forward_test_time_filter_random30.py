@@ -14,6 +14,7 @@ from make_full_rule_test_chart import pick_boxes, score_candidates
 
 SPREAD_PIPS = 1.2
 STOP_PIPS = 10.0
+MIN_TRADE_BOX_BARS = 7
 RISK_PER_TRADE = 0.005
 TIME_BLOCKS = [
     ("00:00-03:00", 0, 3),
@@ -195,6 +196,8 @@ def trade_from_candidate(
     window_start: pd.Timestamp,
     trade_id: int,
 ) -> dict | None:
+    if int(candidate["bars"]) < MIN_TRADE_BOX_BARS:
+        return None
     if candidate["end_i"] > len(window) - 25:
         return None
 

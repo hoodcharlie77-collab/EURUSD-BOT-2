@@ -1950,3 +1950,35 @@ Interpretation:
 - The filter is useful, but it is not enough. The filtered 30-trade forward sample still lost `-44.4` pips.
 - The cleanest next timing idea is not merely excluding `03:00-06:00`; it is testing whether entries should be restricted toward `17:00-24:00` and possibly `12:00-15:00`, while treating `00:00-12:00` with suspicion.
 - This is still a small sample. Do not curve-fit a final session rule yet.
+
+## Visual Entry/Exit Audit 001 - Random 2026 Day Feedback
+
+Chart:
+- Data: `EURUSD_2026.csv`.
+- Random seed: `20260521`.
+- Day: `2026-03-11` New York/Toronto Eastern time.
+- Marked compression boxes, first-breakout entries, exits, and active time filters.
+
+User feedback:
+- Boxes / trades `1` through `6` were visually good.
+- Box / trade `7` was too small horizontally.
+- Box `7` had only `6` five-minute candles.
+- User rule update: trade-qualified compression boxes should need one or two more candles than that.
+
+Rule update:
+- Minimum trade-qualified compression box width is now `7` five-minute candles.
+- Shorter boxes can still be visually interesting, but they should not qualify for automated trade entries yet.
+
+Headfake note:
+- User observed that many accepted compressions did predict later breakout/expansion, but the first breakout-close entry often got headfaked.
+- This is important: the problem is not only compression detection.
+- A losing first entry can still come from a valid compression if price stops the first breakout and then later reaches a useful expansion.
+- Future tests must explicitly separate:
+  - bad compression;
+  - valid compression with bad first-entry timing;
+  - breakout headfake followed by same-direction continuation;
+  - breakout headfake followed by opposite-side expansion.
+
+Implementation note:
+- Future random-day charts now include later-`1R` notes so headfakes are visible.
+- Future forward tests now skip boxes under `7` five-minute candles.
