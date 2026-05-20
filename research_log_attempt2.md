@@ -1982,3 +1982,44 @@ Headfake note:
 Implementation note:
 - Future random-day charts now include later-`1R` notes so headfakes are visible.
 - Future forward tests now skip boxes under `7` five-minute candles.
+
+## Retest Entry Visual Test 001 - Box Mid / Box Edge
+
+User hypothesis:
+- Compression is working.
+- The weak link is entry location: first breakout-close entries often get stopped, then price later makes a good expansion.
+- Test pullback/retest entries instead of chasing breakout close.
+
+Entry test definition:
+- First breakout close still chooses direction.
+- For short breakouts:
+  - sell limit at box mid;
+  - sell limit at box high.
+- For long breakouts:
+  - buy limit at box mid;
+  - buy limit at box low.
+- Entry order is active after breakout close for up to `120` minutes.
+- Stop remains fixed `10` pips.
+- Target remains `1R` box height from entry.
+- Spread remains `1.2` pips round turn.
+- Trade-qualified boxes require at least `7` five-minute candles.
+
+Random chart:
+- Data: `EURUSD_2026.csv`.
+- Random seed: `20260522`.
+- Day: `2026-01-13` New York/Toronto Eastern time.
+
+Filled retest entries:
+
+| Box | Variant | Filter | Entry ET | Direction | Outcome | Net pips |
+|---:|---|---|---|---|---|---:|
+| 2 | mid | pass | 02:20 | long | target | 3.8 |
+| 7 | mid | filtered 15:00-17:00 | 15:40 | short | target | 4.0 |
+| 8 | mid | pass | 21:30 | short | time exit | -4.4 |
+| 8 | edge | pass | 21:50 | short | time exit | -1.5 |
+
+Interpretation:
+- Retest entries avoided many chase entries because several limits never filled.
+- The only pass-filter fills on this random day were roughly flat to slightly negative: `-2.1` pips.
+- The filtered late-NY fill was positive but still should not be trusted because late-NY was already identified as bad/sloppy.
+- This is visually promising enough to test on the 2026 random 30-trade framework, but not enough to declare an edge.

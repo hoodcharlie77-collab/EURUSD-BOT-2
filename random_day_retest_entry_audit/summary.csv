@@ -1,0 +1,2 @@
+data,seed,day_start_new_york,day_end_new_york,orders_tested,filled_orders,pass_fills,filtered_fills,pass_net_pips,all_filled_net_pips
+EURUSD_2026.csv,20260522,2026-01-13 00:00 EST,2026-01-14 00:00 EST,14,4,3,1,-2.1,1.9
