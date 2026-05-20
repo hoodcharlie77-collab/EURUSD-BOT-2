@@ -251,7 +251,46 @@ def backtest_box(
     return result
 
 
-def summarize_trades(trades: pd.DataFrame, stop_r: float, target_r: float, target_mode: str) -> dict:
+def equity_stats(filled: pd.DataFrame, risk_per_trade: float) -> dict:
+    if filled.empty or "net_risk_r" not in filled.columns:
+        return {
+            "sum_net_risk_r": 0.0,
+            "roi_pct": 0.0,
+            "max_drawdown_pct": 0.0,
+            "ending_equity_index": 100.0,
+        }
+
+    ordered = filled.copy()
+    if "signal_time_new_york" in ordered.columns:
+        ordered["_signal_time"] = ordered["signal_time_new_york"].apply(lambda value: parse_est(str(value)))
+        ordered = ordered.sort_values(["_signal_time", "sample", "box"])
+    else:
+        ordered = ordered.sort_values(["sample", "box"])
+
+    equity = 1.0
+    peak = 1.0
+    max_dd = 0.0
+    for r_mult in ordered["net_risk_r"].fillna(0.0):
+        equity *= 1.0 + risk_per_trade * float(r_mult)
+        peak = max(peak, equity)
+        if peak:
+            max_dd = max(max_dd, (peak - equity) / peak)
+
+    return {
+        "sum_net_risk_r": round(float(ordered["net_risk_r"].sum()), 3),
+        "roi_pct": round((equity - 1.0) * 100.0, 2),
+        "max_drawdown_pct": round(max_dd * 100.0, 2),
+        "ending_equity_index": round(equity * 100.0, 2),
+    }
+
+
+def summarize_trades(
+    trades: pd.DataFrame,
+    stop_r: float,
+    target_r: float,
+    target_mode: str,
+    risk_per_trade: float,
+) -> dict:
     filled = trades[trades["trade_status"] == "filled"].copy()
     targets = filled[filled["outcome"] == "target"] if "outcome" in filled.columns else filled.iloc[0:0]
     stops = filled[filled["outcome"] == "stop"] if "outcome" in filled.columns else filled.iloc[0:0]
@@ -260,11 +299,13 @@ def summarize_trades(trades: pd.DataFrame, stop_r: float, target_r: float, targe
     winners = filled[filled["net_pips"] > 0] if "net_pips" in filled.columns else filled.iloc[0:0]
     gross_profit = float(winners["net_pips"].sum()) if len(winners) else 0.0
     gross_loss = abs(float(losers["net_pips"].sum())) if len(losers) else 0.0
+    curve = equity_stats(filled, risk_per_trade)
 
     return {
         "stop_r": stop_r,
         "target_r": target_r,
         "target_mode": target_mode,
+        "risk_per_trade_pct": round(risk_per_trade * 100.0, 3),
         "boxes_tested": len(trades),
         "signals": len(filled),
         "targets": len(targets),
@@ -280,6 +321,7 @@ def summarize_trades(trades: pd.DataFrame, stop_r: float, target_r: float, targe
         "net_pips_avg": round(float(filled["net_pips"].mean()), 2) if len(filled) else 0.0,
         "net_risk_r_avg": round(float(filled["net_risk_r"].mean()), 3) if len(filled) else 0.0,
         "profit_factor_net_pips": round(gross_profit / gross_loss, 3) if gross_loss else math.inf,
+        **curve,
     }
 
 
@@ -290,6 +332,7 @@ def run_backtest(
     stop_r: float,
     target_r: float,
     target_mode: str,
+    risk_per_trade: float,
 ) -> tuple[pd.DataFrame, pd.DataFrame]:
     feedback = pd.read_csv(feedback_path)
     rows = []
@@ -313,7 +356,7 @@ def run_backtest(
     trades = pd.DataFrame(rows)
     out_dir.mkdir(parents=True, exist_ok=True)
     trades.to_csv(out_dir / "breakout_close_trades.csv", index=False)
-    summary = pd.DataFrame([summarize_trades(trades, stop_r, target_r, target_mode)])
+    summary = pd.DataFrame([summarize_trades(trades, stop_r, target_r, target_mode, risk_per_trade)])
     summary.to_csv(out_dir / "summary.csv", index=False)
     return trades, summary
 
@@ -325,12 +368,13 @@ def run_sweep(
     stop_values: list[float],
     target_r: float,
     target_mode: str,
+    risk_per_trade: float,
 ) -> pd.DataFrame:
     out_dir.mkdir(parents=True, exist_ok=True)
     summaries = []
     for stop_r in stop_values:
         stop_dir = out_dir / f"stop_{ratio_label(stop_r)}r"
-        _, summary = run_backtest(feedback_path, root, stop_dir, stop_r, target_r, target_mode)
+        _, summary = run_backtest(feedback_path, root, stop_dir, stop_r, target_r, target_mode, risk_per_trade)
         summaries.append(summary.iloc[0].to_dict())
     sweep = pd.DataFrame(summaries)
     sweep.to_csv(out_dir / "stop_sweep_summary.csv", index=False)
@@ -345,9 +389,18 @@ def main() -> None:
     parser.add_argument("--stop-r-values", default="0.25,0.5,0.75,1.0,1.25,1.5,2.0")
     parser.add_argument("--target-r", type=float, default=1.0)
     parser.add_argument("--target-mode", choices=["entry_r", "box_extension_r"], default="entry_r")
+    parser.add_argument("--risk-per-trade", type=float, default=0.005)
     args = parser.parse_args()
 
-    sweep = run_sweep(args.feedback, args.root, args.out_dir, parse_float_list(args.stop_r_values), args.target_r, args.target_mode)
+    sweep = run_sweep(
+        args.feedback,
+        args.root,
+        args.out_dir,
+        parse_float_list(args.stop_r_values),
+        args.target_r,
+        args.target_mode,
+        args.risk_per_trade,
+    )
     print(sweep.to_string(index=False))
     print(args.out_dir / "stop_sweep_summary.csv")
 

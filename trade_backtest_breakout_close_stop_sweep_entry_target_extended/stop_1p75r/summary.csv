@@ -1,0 +1,2 @@
+stop_r,target_r,target_mode,risk_per_trade_pct,boxes_tested,signals,targets,stops,time_exits,win_rate,positive_net_trades,negative_net_trades,positive_net_rate,gross_pips_total,gross_pips_avg,net_pips_total,net_pips_avg,net_risk_r_avg,profit_factor_net_pips,sum_net_risk_r,roi_pct,max_drawdown_pct,ending_equity_index
+1.75,1.0,entry_r,0.5,33,29,16,6,7,0.552,18,10,0.621,-3.26,-0.11,-38.06,-1.31,-0.011,0.697,-0.309,-0.17,1.84,99.83
