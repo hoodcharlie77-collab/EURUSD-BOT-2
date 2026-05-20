@@ -1,0 +1,2 @@
+boxes_tested,signals,filled_trades,targets,stops,time_exits,target_rate_filled,stop_rate_filled,fill_rate_per_box,net_pips_total,net_pips_avg,net_r_avg,profit_factor_gross_pips,breakout_bb_period,breakout_bb_std,pullback_offset_pips
+33,27,0,0,0,0,0.0,0.0,0.0,0.0,0.0,0.0,inf,20,2.0,22.0

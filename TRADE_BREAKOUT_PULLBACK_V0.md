@@ -31,10 +31,10 @@ Use closes only. Ignore wick-only breaks.
 
 ## Pullback Entry
 
-After a valid breakout signal candle closes:
+After a valid breakout signal candle closes, define `X` as the pullback offset in pips.
 
-- Long limit entry = breakout candle upper BB band + 2 pips.
-- Short limit entry = breakout candle lower BB band - 2 pips.
+- Long limit entry = breakout candle upper BB band + `X` pips.
+- Short limit entry = breakout candle lower BB band - `X` pips.
 
 The order is placed only after the breakout candle closes.
 
@@ -44,6 +44,12 @@ To be a true pullback order:
 - Short entry price must be above the breakout candle close.
 
 If not, skip that signal as not having enough distance for a pullback.
+
+First tested sweep:
+
+- `X = 2, 7, 12, 17, 22, 27, 30` pips outside the breakout band.
+- `BB(20, 2 std)` is used for the breakout-band close.
+- `BB(5, 4 std)` remains the compression visual context.
 
 Entry order expires 120 minutes after the compression box ends.
 

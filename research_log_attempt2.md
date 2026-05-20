@@ -1644,3 +1644,49 @@ Decision:
 - Next clean test should clarify whether the intended pullback is:
   - 2 pips outside the band after a stronger band extension; or
   - 2 pips inside the band / back toward the band, which is a true pullback order.
+
+## Trade Mechanics Test 002 - Outside-Band Pullback Offset Sweep
+
+Reason:
+- The prior test produced 27 `BB(20, 2)` breakout-band signals but only 3 filled trades.
+- User correctly identified the pullback logic as the bottleneck.
+- Test requested: keep the rule as "outside the band" and sweep the outside-band pullback offset from `+2` pips, in 5 pip steps, up to `+30` pips.
+
+Offsets tested:
+- `+2`, `+7`, `+12`, `+17`, `+22`, `+27`, `+30` pips outside the breakout band.
+
+Unchanged mechanics:
+- EURUSD 5-minute candles.
+- Reviewed accepted/questionable compression boxes only.
+- Compression visual context remains `BB(5, 4 std)`.
+- Breakout-band close uses `BB(20, 2 std)`.
+- Compression breakout requires close beyond box by `0.10R`.
+- Entry is a limit order after breakout candle close.
+- Stop = `1R`.
+- Target = `1R`.
+- Spread/transaction cost = 1.2 pips per completed round turn.
+- Same-candle stop and target = pessimistic stop loss.
+
+Sweep result:
+
+| Pullback offset outside band | Signals | Filled trades | Targets | Stops | Net pips |
+|---:|---:|---:|---:|---:|---:|
+| +2 pips | 27 | 3 | 2 | 1 | -2.9 |
+| +7 pips | 27 | 0 | 0 | 0 | 0.0 |
+| +12 pips | 27 | 0 | 0 | 0 | 0.0 |
+| +17 pips | 27 | 0 | 0 | 0 | 0.0 |
+| +22 pips | 27 | 0 | 0 | 0 | 0.0 |
+| +27 pips | 27 | 0 | 0 | 0 | 0.0 |
+| +30 pips | 27 | 0 | 0 | 0 | 0.0 |
+
+Diagnostic:
+- The 27 breakout-band signals barely close outside the `BB(20, 2)` band.
+- Average breakout close distance beyond the band: about `0.91` pip.
+- Maximum breakout close distance beyond the band: `3.94` pips.
+- Therefore every offset `+7` pips or wider is invalid as a true pullback order on this sample; the limit entry would sit beyond the breakout close rather than behind it.
+
+Decision:
+- Outside-band pullback entries are not viable as stated.
+- The phrase "outside the band" is the wrong side of the band for this dataset unless we first require a much stronger extension candle.
+- Do not add a stronger-extension filter yet; that would be curve fitting on a tiny reviewed sample.
+- Next robust test should move the pullback to the band itself or inside/back toward the band.

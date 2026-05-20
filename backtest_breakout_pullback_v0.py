@@ -13,6 +13,23 @@ from make_blind_bb_training_sample import NY, PIP, load_5m_bars
 SPREAD_PIPS = 1.2
 
 
+def offset_label(offset_pips: float) -> str:
+    label = f"{offset_pips:g}".replace(".", "p")
+    return f"offset_{label}pips"
+
+
+def parse_offset_list(raw: str) -> list[float]:
+    offsets = []
+    for item in raw.split(","):
+        item = item.strip()
+        if not item:
+            continue
+        offsets.append(float(item))
+    if not offsets:
+        raise ValueError("No pullback offsets supplied")
+    return offsets
+
+
 def compression_stats(window: pd.DataFrame, start_utc: pd.Timestamp, end_utc: pd.Timestamp) -> dict:
     chunk = window[(window["timestamp"] >= start_utc) & (window["timestamp"] <= end_utc)].copy()
     if chunk.empty:
@@ -46,7 +63,14 @@ def load_rule_test_window(path: Path, breakout_bb_period: int, breakout_bb_std: 
     return add_breakout_bands(window, breakout_bb_period, breakout_bb_std)
 
 
-def find_breakout_signal(window: pd.DataFrame, end_utc: pd.Timestamp, box_high: float, box_low: float, r_price: float) -> dict | None:
+def find_breakout_signal(
+    window: pd.DataFrame,
+    end_utc: pd.Timestamp,
+    box_high: float,
+    box_low: float,
+    r_price: float,
+    pullback_offset_pips: float,
+) -> dict | None:
     start = end_utc + pd.Timedelta(minutes=5)
     deadline = end_utc + pd.Timedelta(minutes=60)
     post = window[(window["timestamp"] >= start) & (window["timestamp"] <= deadline)].copy()
@@ -59,7 +83,8 @@ def find_breakout_signal(window: pd.DataFrame, end_utc: pd.Timestamp, box_high: 
         if math.isnan(upper_band) or math.isnan(lower_band):
             continue
         if close > box_high + buffer_price and close > upper_band:
-            entry = upper_band + 2.0 * PIP
+            entry = upper_band + pullback_offset_pips * PIP
+            band_distance_pips = (close - upper_band) / PIP
             if entry < close:
                 return {
                     "signal_i": int(idx),
@@ -67,6 +92,7 @@ def find_breakout_signal(window: pd.DataFrame, end_utc: pd.Timestamp, box_high: 
                     "direction": "long",
                     "signal_close": close,
                     "signal_band": upper_band,
+                    "signal_band_distance_pips": band_distance_pips,
                     "entry_price": entry,
                 }
             return {
@@ -75,11 +101,13 @@ def find_breakout_signal(window: pd.DataFrame, end_utc: pd.Timestamp, box_high: 
                 "direction": "long",
                 "signal_close": close,
                 "signal_band": upper_band,
+                "signal_band_distance_pips": band_distance_pips,
                 "entry_price": entry,
                 "skip_reason": "signal_close_not_far_enough_for_pullback",
             }
         if close < box_low - buffer_price and close < lower_band:
-            entry = lower_band - 2.0 * PIP
+            entry = lower_band - pullback_offset_pips * PIP
+            band_distance_pips = (lower_band - close) / PIP
             if entry > close:
                 return {
                     "signal_i": int(idx),
@@ -87,6 +115,7 @@ def find_breakout_signal(window: pd.DataFrame, end_utc: pd.Timestamp, box_high: 
                     "direction": "short",
                     "signal_close": close,
                     "signal_band": lower_band,
+                    "signal_band_distance_pips": band_distance_pips,
                     "entry_price": entry,
                 }
             return {
@@ -95,6 +124,7 @@ def find_breakout_signal(window: pd.DataFrame, end_utc: pd.Timestamp, box_high: 
                 "direction": "short",
                 "signal_close": close,
                 "signal_band": lower_band,
+                "signal_band_distance_pips": band_distance_pips,
                 "entry_price": entry,
                 "skip_reason": "signal_close_not_far_enough_for_pullback",
             }
@@ -186,7 +216,14 @@ def resolve_trade(
     }
 
 
-def backtest_box(window: pd.DataFrame, sample: int, box_row: pd.Series, status: str, note: str) -> dict:
+def backtest_box(
+    window: pd.DataFrame,
+    sample: int,
+    box_row: pd.Series,
+    status: str,
+    note: str,
+    pullback_offset_pips: float,
+) -> dict:
     box_num = int(box_row["box"])
     start_utc = parse_est(str(box_row["start_new_york"]))
     end_utc = parse_est(str(box_row["end_new_york"]))
@@ -202,9 +239,10 @@ def backtest_box(window: pd.DataFrame, sample: int, box_row: pd.Series, status: 
         "box_start_new_york": start_utc.tz_convert(NY).strftime("%Y-%m-%d %H:%M EST"),
         "box_end_new_york": end_utc.tz_convert(NY).strftime("%Y-%m-%d %H:%M EST"),
         "box_range_pips": round(r_pips, 2),
+        "pullback_offset_pips": pullback_offset_pips,
     }
 
-    signal = find_breakout_signal(window, end_utc, stats["high"], stats["low"], r_price)
+    signal = find_breakout_signal(window, end_utc, stats["high"], stats["low"], r_price, pullback_offset_pips)
     if signal is None:
         result.update({"trade_status": "no_signal"})
         return result
@@ -215,6 +253,7 @@ def backtest_box(window: pd.DataFrame, sample: int, box_row: pd.Series, status: 
             "direction": signal["direction"],
             "signal_close": round(signal["signal_close"], 5),
             "signal_band": round(signal["signal_band"], 5),
+            "signal_band_distance_pips": round(signal["signal_band_distance_pips"], 2),
             "entry_price": round(signal["entry_price"], 5),
             "signal_minutes_after_box": round((signal["signal_time"] - end_utc) / pd.Timedelta(minutes=1), 1),
         }
@@ -264,6 +303,7 @@ def run_backtest(
     out_dir: Path,
     breakout_bb_period: int,
     breakout_bb_std: float,
+    pullback_offset_pips: float,
 ) -> tuple[pd.DataFrame, pd.DataFrame]:
     feedback = pd.read_csv(feedback_path)
     rows = []
@@ -280,7 +320,7 @@ def run_backtest(
             match = boxes[boxes["box"] == box_num]
             if match.empty:
                 raise ValueError(f"Missing sample {sample} box {box_num}")
-            rows.append(backtest_box(window, int(sample), match.iloc[0], status, str(fb["note"])))
+            rows.append(backtest_box(window, int(sample), match.iloc[0], status, str(fb["note"]), pullback_offset_pips))
 
     trades = pd.DataFrame(rows)
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -326,6 +366,7 @@ def run_backtest(
                 else math.inf,
                 "breakout_bb_period": breakout_bb_period,
                 "breakout_bb_std": breakout_bb_std,
+                "pullback_offset_pips": pullback_offset_pips,
             }
         ]
     )
@@ -340,9 +381,38 @@ def main() -> None:
     parser.add_argument("--out-dir", type=Path, default=Path("trade_backtest_breakout_pullback_v0"))
     parser.add_argument("--breakout-bb-period", type=int, default=20)
     parser.add_argument("--breakout-bb-std", type=float, default=2.0)
+    parser.add_argument("--pullback-offset-pips", type=float, default=2.0)
+    parser.add_argument("--sweep-pullback-offsets", default="")
     args = parser.parse_args()
 
-    trades, summary = run_backtest(args.feedback, args.root, args.out_dir, args.breakout_bb_period, args.breakout_bb_std)
+    if args.sweep_pullback_offsets:
+        args.out_dir.mkdir(parents=True, exist_ok=True)
+        summaries = []
+        for offset_pips in parse_offset_list(args.sweep_pullback_offsets):
+            offset_dir = args.out_dir / offset_label(offset_pips)
+            _, summary = run_backtest(
+                args.feedback,
+                args.root,
+                offset_dir,
+                args.breakout_bb_period,
+                args.breakout_bb_std,
+                offset_pips,
+            )
+            summaries.append(summary.iloc[0].to_dict())
+        sweep = pd.DataFrame(summaries)
+        sweep.to_csv(args.out_dir / "pullback_offset_sweep_summary.csv", index=False)
+        print(sweep.to_string(index=False))
+        print(args.out_dir / "pullback_offset_sweep_summary.csv")
+        return
+
+    trades, summary = run_backtest(
+        args.feedback,
+        args.root,
+        args.out_dir,
+        args.breakout_bb_period,
+        args.breakout_bb_std,
+        args.pullback_offset_pips,
+    )
     print(summary.to_string(index=False))
     if not trades.empty:
         cols = [col for col in ["sample", "box", "trade_status", "direction", "outcome", "net_pips", "net_r"] if col in trades.columns]
