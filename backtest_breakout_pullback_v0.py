@@ -7,7 +7,7 @@ from pathlib import Path
 import pandas as pd
 
 from audit_compression_expansion import load_boxes, parse_est, sample_dir
-from make_blind_bb_training_sample import NY, PIP, load_5m_bars
+from make_blind_bb_training_sample import NY, PIP, fmt_est, load_5m_bars
 
 
 SPREAD_PIPS = 1.2
@@ -236,8 +236,8 @@ def backtest_box(
         "box": box_num,
         "status": status,
         "note": note,
-        "box_start_new_york": start_utc.tz_convert(NY).strftime("%Y-%m-%d %H:%M EST"),
-        "box_end_new_york": end_utc.tz_convert(NY).strftime("%Y-%m-%d %H:%M EST"),
+        "box_start_new_york": fmt_est(start_utc),
+        "box_end_new_york": fmt_est(end_utc),
         "box_range_pips": round(r_pips, 2),
         "pullback_offset_pips": pullback_offset_pips,
     }
@@ -249,7 +249,7 @@ def backtest_box(
 
     result.update(
         {
-            "signal_time_new_york": signal["signal_time"].tz_convert(NY).strftime("%Y-%m-%d %H:%M EST"),
+            "signal_time_new_york": fmt_est(signal["signal_time"]),
             "direction": signal["direction"],
             "signal_close": round(signal["signal_close"], 5),
             "signal_band": round(signal["signal_band"], 5),
@@ -275,7 +275,7 @@ def backtest_box(
     result.update(
         {
             "trade_status": "filled",
-            "entry_time_new_york": entry_time.tz_convert(NY).strftime("%Y-%m-%d %H:%M EST"),
+            "entry_time_new_york": fmt_est(entry_time),
             "entry_minutes_after_signal": round((entry_time - signal["signal_time"]) / pd.Timedelta(minutes=1), 1),
             "stop_price": round(float(signal["entry_price"]) - r_price, 5)
             if signal["direction"] == "long"
@@ -284,7 +284,7 @@ def backtest_box(
             if signal["direction"] == "long"
             else round(float(signal["entry_price"]) - r_price, 5),
             "outcome": resolved["outcome"],
-            "exit_time_new_york": resolved["exit_time"].tz_convert(NY).strftime("%Y-%m-%d %H:%M EST")
+            "exit_time_new_york": fmt_est(resolved["exit_time"])
             if not pd.isna(resolved["exit_time"])
             else "",
             "exit_price": round(resolved["exit_price"], 5) if not pd.isna(resolved["exit_price"]) else "",

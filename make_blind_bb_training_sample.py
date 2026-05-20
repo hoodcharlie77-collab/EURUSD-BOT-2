@@ -270,7 +270,12 @@ def find_sample_window(
 
 
 def fmt_est(ts: pd.Timestamp) -> str:
-    return ts.tz_convert(NY).strftime("%Y-%m-%d %H:%M EST")
+    """Format in the New York/Toronto Eastern market clock.
+
+    Keep the legacy name because existing scripts import it, but do not
+    hard-code EST. Summer dates must print EDT.
+    """
+    return ts.tz_convert(NY).strftime("%Y-%m-%d %H:%M %Z")
 
 
 def load_font(size: int, bold: bool = False) -> ImageFont.FreeTypeFont | ImageFont.ImageFont:

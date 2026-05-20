@@ -1893,3 +1893,17 @@ Interpretation:
 - Capturing 90% requires a stop larger than the `1R` target.
 - A `1R` target with a `1.5R+` stop is poor reward/risk before spread.
 - The right direction is not "catch all expansions"; it is to isolate the subset that reaches `1R` without deep adverse excursion.
+
+## Timezone Standardization - New York / Toronto Eastern Time
+
+User requested New York / Toronto Eastern time.
+
+Code status:
+- The active scripts already used the `America/New_York` trading clock, which matches Toronto's Eastern time for these purposes.
+- Old output labels were hard-coded as `EST`, which is wrong during daylight saving time.
+- Future generated reports/charts now use `fmt_est()` so timestamps print the real zone abbreviation: `EST` in winter, `EDT` in summer.
+- Legacy parsing now accepts timestamps ending in `EST`, `EDT`, or `ET`.
+
+Important:
+- Existing historical CSVs/reports were not rewritten retroactively.
+- Regenerate a chart/report if the timestamp label itself matters.

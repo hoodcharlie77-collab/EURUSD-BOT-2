@@ -7,7 +7,7 @@ from pathlib import Path
 import pandas as pd
 
 from audit_compression_expansion import load_boxes, parse_est, sample_dir
-from make_blind_bb_training_sample import NY, PIP
+from make_blind_bb_training_sample import NY, PIP, fmt_est
 
 
 CAPTURE_LEVELS = [0.50, 0.70, 0.90]
@@ -175,12 +175,12 @@ def analyze(feedback_path: Path, root: Path, out_dir: Path) -> tuple[pd.DataFram
                 "sample": int(sample),
                 "box": box_num,
                 "status": status,
-                "box_start_new_york": start_utc.tz_convert(NY).strftime("%Y-%m-%d %H:%M EST"),
-                "box_end_new_york": end_utc.tz_convert(NY).strftime("%Y-%m-%d %H:%M EST"),
+                "box_start_new_york": fmt_est(start_utc),
+                "box_end_new_york": fmt_est(end_utc),
                 "box_range_pips": round(stats["r_pips"], 2),
                 "hit_1r_120m": bool(target_dir),
                 "target_dir": target_dir or "",
-                "target_time_new_york": target_time.tz_convert(NY).strftime("%Y-%m-%d %H:%M EST")
+                "target_time_new_york": fmt_est(target_time)
                 if target_time is not None
                 else "",
             }
@@ -200,7 +200,7 @@ def analyze(feedback_path: Path, root: Path, out_dir: Path) -> tuple[pd.DataFram
                     {
                         **base,
                         "entry_model": "box_boundary_in_eventual_target_direction",
-                        "entry_time_new_york": entry_time.tz_convert(NY).strftime("%Y-%m-%d %H:%M EST"),
+                        "entry_time_new_york": fmt_est(entry_time),
                         "required_stop_r": stop_r,
                         "required_stop_pips": stop_pips,
                     }
@@ -227,11 +227,9 @@ def analyze(feedback_path: Path, root: Path, out_dir: Path) -> tuple[pd.DataFram
                             **base,
                             "entry_model": "first_breakout_close_same_direction_target",
                             "first_break_dir": break_dir,
-                            "entry_time_new_york": break_time.tz_convert(NY).strftime("%Y-%m-%d %H:%M EST"),
+                            "entry_time_new_york": fmt_est(break_time),
                             "entry_price": round(float(entry_price), 5),
-                            "same_direction_target_time_new_york": same_dir_target_time.tz_convert(NY).strftime(
-                                "%Y-%m-%d %H:%M EST"
-                            )
+                            "same_direction_target_time_new_york": fmt_est(same_dir_target_time)
                             if same_dir_target_time is not None
                             else "",
                             "required_stop_r": stop_r,

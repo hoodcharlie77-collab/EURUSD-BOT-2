@@ -8,7 +8,7 @@ import pandas as pd
 
 from audit_compression_expansion import load_boxes, parse_est, sample_dir
 from backtest_breakout_close_stop_sweep import box_stats, first_close_break, parse_float_list, resolve_trade
-from make_blind_bb_training_sample import NY, PIP
+from make_blind_bb_training_sample import NY, PIP, fmt_est
 
 
 SPREAD_PIPS = 1.2
@@ -70,8 +70,8 @@ def backtest_box(
         "box": box_num,
         "status": status,
         "note": note,
-        "box_start_new_york": start_utc.tz_convert(NY).strftime("%Y-%m-%d %H:%M EST"),
-        "box_end_new_york": end_utc.tz_convert(NY).strftime("%Y-%m-%d %H:%M EST"),
+        "box_start_new_york": fmt_est(start_utc),
+        "box_end_new_york": fmt_est(end_utc),
         "box_range_pips": round(r_pips, 2),
         "entry_rule": "first_close_breakout",
         "stop_mode": "fixed_pips",
@@ -111,7 +111,7 @@ def backtest_box(
             {
                 "trade_status": "no_trade",
                 "direction": signal["direction"],
-                "signal_time_new_york": signal["signal_time"].tz_convert(NY).strftime("%Y-%m-%d %H:%M EST"),
+                "signal_time_new_york": fmt_est(signal["signal_time"]),
                 "signal_minutes_after_box": round((signal["signal_time"] - end_utc) / pd.Timedelta(minutes=1), 1),
                 "entry_price": round(entry_price, 5),
                 "outcome": "entry_beyond_target",
@@ -132,7 +132,7 @@ def backtest_box(
         {
             "trade_status": "filled",
             "direction": signal["direction"],
-            "signal_time_new_york": signal["signal_time"].tz_convert(NY).strftime("%Y-%m-%d %H:%M EST"),
+            "signal_time_new_york": fmt_est(signal["signal_time"]),
             "signal_minutes_after_box": round((signal["signal_time"] - end_utc) / pd.Timedelta(minutes=1), 1),
             "entry_price": round(entry_price, 5),
             "stop_price": round(stop_price, 5),
@@ -141,7 +141,7 @@ def backtest_box(
             "reward_pips": round(reward_pips, 2),
             "reward_to_risk": round(reward_pips / stop_pips, 3) if stop_pips else math.nan,
             "outcome": resolved["outcome"],
-            "exit_time_new_york": resolved["exit_time"].tz_convert(NY).strftime("%Y-%m-%d %H:%M EST")
+            "exit_time_new_york": fmt_est(resolved["exit_time"])
             if not pd.isna(resolved["exit_time"])
             else "",
             "exit_price": round(resolved["exit_price"], 5) if not pd.isna(resolved["exit_price"]) else "",

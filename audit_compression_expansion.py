@@ -7,7 +7,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from make_blind_bb_training_sample import NY, PIP, in_late_ny_garbage
+from make_blind_bb_training_sample import NY, PIP, fmt_est, in_late_ny_garbage
 
 
 HORIZONS_MIN = [30, 60, 90, 120]
@@ -15,7 +15,11 @@ TARGET_RATIOS = [0.75, 1.0, 1.5, 2.0]
 
 
 def parse_est(value: str) -> pd.Timestamp:
-    clean = value.replace(" EST", "")
+    clean = (
+        value.replace(" EST", "")
+        .replace(" EDT", "")
+        .replace(" ET", "")
+    )
     return pd.Timestamp(clean, tz=NY).tz_convert("UTC")
 
 
@@ -101,8 +105,8 @@ def measure_forward(
         "label": label,
         "status": status,
         "note": note,
-        "start_new_york": start_utc.tz_convert(NY).strftime("%Y-%m-%d %H:%M EST"),
-        "end_new_york": end_utc.tz_convert(NY).strftime("%Y-%m-%d %H:%M EST"),
+        "start_new_york": fmt_est(start_utc),
+        "end_new_york": fmt_est(end_utc),
         "box_bars": stats["box_bars"],
         "box_duration_min": stats["box_duration_min"],
         "box_range_pips": round(box_range_pips, 2),

@@ -11,6 +11,7 @@ from make_blind_bb_training_sample import (
     NY,
     PIP,
     draw_polyline,
+    fmt_est,
     in_late_ny_garbage,
     load_5m_bars,
     load_font,
@@ -178,7 +179,7 @@ def draw_chart(
     )
     draw.text(
         (right - 560, price_bottom - 34),
-        f"{start_ny:%b %d %H:%M} to {end_ny:%b %d %H:%M} EST | full window visible",
+        f"{start_ny:%b %d %H:%M %Z} to {end_ny:%b %d %H:%M %Z} | full window visible",
         fill="#374151",
         font=small_font,
     )
@@ -351,8 +352,8 @@ def main() -> None:
         row = {
             "box": idx,
             "tier": candidate["tier"],
-            "start_new_york": window.iloc[candidate["start_i"]]["timestamp"].tz_convert(NY).strftime("%Y-%m-%d %H:%M EST"),
-            "end_new_york": window.iloc[candidate["end_i"]]["timestamp"].tz_convert(NY).strftime("%Y-%m-%d %H:%M EST"),
+            "start_new_york": fmt_est(window.iloc[candidate["start_i"]]["timestamp"]),
+            "end_new_york": fmt_est(window.iloc[candidate["end_i"]]["timestamp"]),
         }
         for key in [
             "bars",
@@ -375,8 +376,8 @@ def main() -> None:
             {
                 "sample": args.sample_id,
                 "data": str(chosen_data),
-                "start_new_york": window.iloc[0]["timestamp"].tz_convert(NY).strftime("%Y-%m-%d %H:%M EST"),
-                "end_new_york": window.iloc[-1]["timestamp"].tz_convert(NY).strftime("%Y-%m-%d %H:%M EST"),
+                "start_new_york": fmt_est(window.iloc[0]["timestamp"]),
+                "end_new_york": fmt_est(window.iloc[-1]["timestamp"]),
                 "local_median_bb_width_pips": round(med, 2),
                 "local_q25_bb_width_pips": round(q25, 2),
                 "local_q75_bb_width_pips": round(q75, 2),
