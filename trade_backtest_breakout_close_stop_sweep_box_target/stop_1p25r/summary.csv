@@ -1,0 +1,2 @@
+stop_r,target_r,target_mode,boxes_tested,signals,targets,stops,time_exits,win_rate,positive_net_trades,negative_net_trades,positive_net_rate,gross_pips_total,gross_pips_avg,net_pips_total,net_pips_avg,net_risk_r_avg,profit_factor_net_pips
+1.25,1.0,box_extension_r,33,29,17,8,4,0.586,18,10,0.621,-13.86,-0.48,-48.66,-1.68,-0.171,0.518

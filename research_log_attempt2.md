@@ -1690,3 +1690,62 @@ Decision:
 - The phrase "outside the band" is the wrong side of the band for this dataset unless we first require a much stronger extension candle.
 - Do not add a stronger-extension filter yet; that would be curve fitting on a tiny reviewed sample.
 - Next robust test should move the pullback to the band itself or inside/back toward the band.
+
+## Trade Mechanics Test 003 - Breakout Close Entry Stop Sweep
+
+Reason:
+- User asked how the 29 breakout signals were generated and whether actual trades could be tested from them.
+- The 29 signals came from the breakout v0 audit:
+  - first 5-minute close beyond the compression box by `0.10R`;
+  - signal within 60 minutes after compression box end;
+  - rejected visual boxes excluded.
+- The prior 82.8% number was not a trade win rate. It was a forward expansion label.
+
+Trade conversion:
+- Entry = breakout signal candle close.
+- Stop = swept in `R` multiples from entry.
+- Spread/transaction cost = 1.2 pips round turn.
+- Same-candle stop and target = pessimistic stop loss.
+- Trade deadline = 120 minutes after compression box end.
+
+Stop sizes:
+- `0.25R`, `0.50R`, `0.75R`, `1.00R`, `1.25R`, `1.50R`, `2.00R`.
+
+Two target modes tested:
+- `entry_r`: target is `1R` from the entry close.
+- `box_extension_r`: target is the original audit target, `box_high + 1R` for longs and `box_low - 1R` for shorts.
+
+Entry-based target results:
+
+| Stop | Signals | Targets | Stops | Time exits | Net pips |
+|---:|---:|---:|---:|---:|---:|
+| 0.25R | 29 | 6 | 22 | 1 | -33.39 |
+| 0.50R | 29 | 10 | 18 | 1 | -30.10 |
+| 0.75R | 29 | 13 | 13 | 3 | -13.44 |
+| 1.00R | 29 | 13 | 12 | 4 | -32.90 |
+| 1.25R | 29 | 13 | 10 | 6 | -51.01 |
+| 1.50R | 29 | 13 | 9 | 7 | -61.35 |
+| 2.00R | 29 | 17 | 5 | 7 | -33.00 |
+
+Box-extension target results:
+
+| Stop | Signals | Targets | Stops | Time exits | Net pips |
+|---:|---:|---:|---:|---:|---:|
+| 0.25R | 29 | 12 | 17 | 0 | -18.40 |
+| 0.50R | 29 | 15 | 14 | 0 | -23.85 |
+| 0.75R | 29 | 17 | 11 | 1 | -20.39 |
+| 1.00R | 29 | 17 | 10 | 2 | -35.20 |
+| 1.25R | 29 | 17 | 8 | 4 | -48.66 |
+| 1.50R | 29 | 17 | 7 | 5 | -54.35 |
+| 2.00R | 29 | 21 | 3 | 5 | -23.60 |
+
+Interpretation:
+- Every tested stop size loses after spread.
+- The best entry-based target result was `0.75R` stop at `-13.44` pips.
+- The best box-extension target result was `0.25R` stop at `-18.40` pips.
+- Costs matter heavily because many compression boxes are only about 4 to 9 pips tall.
+- Raw breakout-close entry is not enough. The compression premise may still be useful, but direct chase entry is weak.
+
+Decision:
+- Do not treat the 29 breakout signals as a tradable edge by themselves.
+- Continue testing entry improvement, especially pullback/retest logic, rather than adding more confirmation filters.
