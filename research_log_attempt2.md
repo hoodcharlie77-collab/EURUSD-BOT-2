@@ -1244,3 +1244,152 @@ Training conclusion:
 - The largest model risk is recall: missing short clean shelves after volatility settles.
 - The largest trading risk is overaccepting marginal shelves without requiring expansion confirmation.
 - Next logical phase: define expansion/headfake confirmation after compression, instead of adding more compression filters.
+
+## Full 12-Hour Rule Test 049 - 2022-02-28 18:40 EST Start
+
+Format:
+- Full 12-hour window visible.
+- EURUSD 5-minute candles.
+- `BB(5, 4 std)`.
+- New York time.
+- Boxes drawn by Compression v0.1 rules before user review.
+
+Model boxes:
+- Box 1: 19:10-19:40 EST, strong, aspect 6.86, range 5.1 pips.
+- Box 2: 21:30-22:00 EST, strong, aspect 8.97, range 3.9 pips.
+- Box 3: 23:20-23:55 EST, strong, aspect 8.33, range 4.8 pips.
+- Box 4: 00:35-01:30 EST, strong, aspect 7.89, range 7.6 pips.
+
+User feedback:
+- All boxes are fine.
+
+Rule note:
+- First full-window, future-visible rule test passed.
+- The rule correctly found clustered compressions before a later larger expansion/downside move.
+- Box 1 was close to the left edge and slightly drifted down, but still accepted. This supports allowing mild drift when containment is clean.
+
+## Full 12-Hour Rule Test 050 - 2023-11-29 04:55 EST Start
+
+Format:
+- Full 12-hour window visible.
+- EURUSD 5-minute candles.
+- `BB(5, 4 std)`.
+- New York time.
+- Boxes drawn by Compression v0.1 rules before user review.
+
+Model boxes:
+- Box 1: 05:40-06:25 EST, strong, aspect 7.25, range 6.9 pips.
+- Box 2: 07:25-08:05 EST, strong, aspect 6.08, range 7.4 pips.
+- Box 3: 11:10-11:50 EST, strong, aspect 5.17, range 8.7 pips.
+- Box 4: 12:10-12:40 EST, strong, aspect 7.45, range 4.7 pips.
+
+User feedback:
+- All four boxes are good.
+
+Rule note:
+- Second full-window, future-visible rule test passed.
+- Box 3 followed a sharp expansion/drop and still settled enough to count.
+- Current rule continues to separate actual shelves from surrounding directional movement without needing extra filters.
+
+## Full 12-Hour Rule Test 051 - 2024-02-07 12:25 EST Start
+
+Format:
+- Full 12-hour window visible.
+- EURUSD 5-minute candles.
+- `BB(5, 4 std)`.
+- New York time.
+- Boxes drawn by Compression v0.1 rules before user review.
+
+Model boxes:
+- Box 1: 14:00-14:55 EST, strong, aspect 11.11, range 5.4 pips.
+- Box 2: 17:25-18:10 EST, strong, aspect 13.16, range 3.8 pips.
+- Box 3: 19:30-20:25 EST, strong, aspect 15.38, range 3.9 pips.
+- Box 4: 23:50-00:20 EST, strong, aspect 7.95, range 4.4 pips.
+
+User feedback:
+- Accepted / fine.
+
+Rule note:
+- Third full-window test passed.
+- Box 4 was visually more edge-case because it was short and appeared near the far right after a local peak/pullback, but user accepted it.
+- The current rule is still broadly aligned, though far-right short shelves should remain watched for overacceptance once expansion confirmation is added.
+
+## Full 12-Hour Rule Test 052 - 2024-11-26 02:05 EST Start
+
+Format:
+- Full 12-hour window visible.
+- EURUSD 5-minute candles.
+- `BB(5, 4 std)`.
+- New York time.
+- Boxes drawn by Compression v0.1 rules before user review.
+
+Model boxes:
+- Box 1: 02:15-02:40 EST, strong, aspect 2.42, range 12.4 pips.
+- Box 2: 05:20-06:15 EST, strong, aspect 5.04, range 11.9 pips.
+- Box 3: 09:45-10:10 EST, strong, aspect 2.17, range 13.8 pips.
+- Box 4: 12:15-13:10 EST, strong, aspect 5.83, range 10.3 pips.
+
+User feedback:
+- Box 1 is correct.
+- Box 2 is correct.
+- Box 3 is wrong.
+- Box 4 is correct.
+
+Rule note:
+- Box 3 exposed a weakness in the short-clean shelf exception.
+- Low progress/travel by itself is not enough for a short box. Box 3 was too stubby and too wide for only 30 minutes, and it sat in an active directional leg rather than a settled shelf.
+- Rule adjustment: short-clean exceptions now require stricter horizontal shape/context: max 13.0 pips, aspect at least 2.3, and no excessive travel in the prior six candles.
+- Short-clean exceptions that do not meet the normal rectangle rule should be treated as marginal, not strong. Normal 45-60 minute rectangles still use the proportional rule.
+
+## Full 12-Hour Rule Test 053 - 2025-06-24 21:50 EST Start
+
+Format:
+- Full 12-hour window visible.
+- EURUSD 5-minute candles.
+- `BB(5, 4 std)`.
+- New York time.
+- Boxes drawn by Compression v0.1 rules before user review.
+
+Model boxes:
+- Box 1: 22:50-23:40 EST, strong, aspect 9.65, range 5.7 pips.
+- Box 2: 00:15-01:10 EST, strong, aspect 9.84, range 6.1 pips.
+- Box 3: 06:30-07:00 EST, strong, aspect 5.07, range 6.9 pips.
+- Box 4: 07:40-08:20 EST, strong, aspect 5.23, range 8.6 pips.
+
+User feedback:
+- Box 1 is correct.
+- Box 2 is correct.
+- Box 3 is not accepted.
+- Box 4 is correct.
+
+Rule note:
+- Box 3 is a precision miss after the short-shelf fix.
+- Unlike Sample 052 Box 3, this one passed the normal rectangle criteria numerically. The issue is visual/contextual: it sits inside an upswing pause and does not read like a settled compression shelf.
+- Do not add a brittle numeric patch off this one case. This belongs in the next layer: compression confidence should be downgraded when the box is merely a pause inside a still-active swing rather than a settled shelf.
+- Expansion/headfake confirmation should help separate tradable compression from ordinary trend pauses.
+
+## Full 12-Hour Rule Test 054 - 2024-02-07 05:25 EST Start
+
+Format:
+- Full 12-hour window visible.
+- EURUSD 5-minute candles.
+- `BB(5, 4 std)`.
+- New York time.
+- Boxes drawn by Compression v0.1 rules before user review.
+
+Model boxes:
+- Box 1: 05:40-06:20 EST, strong, aspect 5.29, range 8.5 pips.
+- Box 2: 06:40-07:35 EST, strong, aspect 7.50, range 8.0 pips.
+- Box 3: 12:10-12:55 EST, strong, aspect 7.81, range 6.4 pips.
+- Box 4: 14:00-14:55 EST, strong, aspect 11.11, range 5.4 pips.
+
+User feedback:
+- Box 1 is correct.
+- Box 2 is correct.
+- Box 3 is correct.
+- Box 4 is correct.
+
+Rule note:
+- Full-window test passed cleanly after the short-shelf fix.
+- The accepted boxes include both pre-move shelves and post-volatility compression shelves.
+- No compression-rule change needed from this sample.

@@ -1,0 +1,2 @@
+sample,data,start_new_york,end_new_york,local_median_bb_width_pips,local_q25_bb_width_pips,local_q75_bb_width_pips,candidate_count,picked_count
+50,EURUSD_2023.csv,2023-11-29 04:55 EST,2023-11-29 16:50 EST,14.86,9.53,22.07,189,4

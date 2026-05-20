@@ -1,0 +1,5 @@
+box,tier,start_new_york,end_new_york,bars,duration_min,range_pips,aspect,progress_pips,progress_ratio,travel_ratio,bb_width_median,score
+1,strong,2024-11-26 02:15 EST,2024-11-26 02:40 EST,6,30,12.4,2.42,0.9,0.07,0.96,18.03,8.7
+2,strong,2024-11-26 05:20 EST,2024-11-26 06:15 EST,12,60,11.9,5.04,0.2,0.02,1.64,14.95,11.57
+3,strong,2024-11-26 09:45 EST,2024-11-26 10:10 EST,6,30,13.8,2.17,0.2,0.01,0.67,12.43,8.8
+4,strong,2024-11-26 12:15 EST,2024-11-26 13:10 EST,12,60,10.3,5.83,0.2,0.02,2.17,17.73,11.82
