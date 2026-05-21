@@ -2023,3 +2023,41 @@ Interpretation:
 - The only pass-filter fills on this random day were roughly flat to slightly negative: `-2.1` pips.
 - The filtered late-NY fill was positive but still should not be trusted because late-NY was already identified as bad/sloppy.
 - This is visually promising enough to test on the 2026 random 30-trade framework, but not enough to declare an edge.
+
+## Trade Rule Update - Minimum Target Equals Stop
+
+User correction:
+- Current trade structure was upside down: fixed `10` pip stop while many box-height targets were only `4` to `6` pips.
+- User requested minimum profit target equals stop loss.
+
+Rule update:
+- Profit target distance is now `max(compression box height, stop distance)`.
+- With the current fixed `10` pip stop, target distance is now at least `10` pips.
+- This applies to active forward-test and chart-generation scripts.
+
+Retest visual audit rerun:
+- Same random day: `2026-01-13`.
+- Same retest entries.
+- Target changed from box-height target to minimum `10` pip target.
+
+Updated retest fills:
+
+| Box | Variant | Filter | Direction | Outcome | Target pips | R:R | Net pips |
+|---:|---|---|---|---|---:|---:|---:|
+| 2 | mid | pass | long | target | 10.0 | 1.0 | 8.8 |
+| 7 | mid | filtered 15:00-17:00 | short | time exit | 10.0 | 1.0 | 4.8 |
+| 8 | mid | pass | short | time exit | 10.0 | 1.0 | -4.4 |
+| 8 | edge | pass | short | time exit | 10.0 | 1.0 | -1.5 |
+
+Same 2026 random-30 forward test rerun:
+
+| Test | Trades | Target hit | Positive net | Net pips | ROI | Max DD |
+|---|---:|---:|---:|---:|---:|---:|
+| All collected before filter | 33 | 18.2% | 36.4% | -63.6 | -3.15% | 3.41% |
+| Filtered random 30 | 30 | 16.7% | 36.7% | -50.0 | -2.49% | 2.75% |
+| Excluded 03:00-06:00 only | 3 | 33.3% | 33.3% | -13.6 | -0.68% | 1.12% |
+
+Interpretation:
+- The rule is structurally correct. No more risking `10` to make `4`.
+- But the same 2026 random-30 sample still loses after moving to minimum `1:1`.
+- The strategy still needs an entry/management improvement, not a return to bad reward/risk.

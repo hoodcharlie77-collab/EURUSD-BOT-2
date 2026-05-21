@@ -78,6 +78,8 @@ def draw_trade_zoom(
     box_low = float(trade["box_low"])
     box_high = float(trade["box_high"])
     box_mid = float(trade["box_mid"])
+    risk_pips = abs(entry_price - stop_price) / PIP
+    target_pips = abs(target_price - entry_price) / PIP
 
     ymin = min(
         float(view["low"].min()),
@@ -208,6 +210,8 @@ def draw_trade_zoom(
         ("Variant", str(trade["variant"])),
         ("Box bars", str(int(trade["box_bars"]))),
         ("Box range", f"{float(trade['box_range_pips']):.1f} pips"),
+        ("Target dist", f"{target_pips:.1f} pips"),
+        ("R:R", f"{target_pips / risk_pips:.2f}" if risk_pips else ""),
         ("Entry", nice_price(entry_price)),
         ("Stop", nice_price(stop_price)),
         ("Target", nice_price(target_price)),

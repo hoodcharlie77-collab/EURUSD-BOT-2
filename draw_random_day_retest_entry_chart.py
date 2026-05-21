@@ -8,7 +8,14 @@ from pathlib import Path
 import pandas as pd
 from PIL import Image, ImageDraw
 
-from forward_test_time_filter_random30 import MIN_TRADE_BOX_BARS, STOP_PIPS, SPREAD_PIPS, resolve_trade, time_block
+from forward_test_time_filter_random30 import (
+    MIN_TRADE_BOX_BARS,
+    STOP_PIPS,
+    SPREAD_PIPS,
+    resolve_trade,
+    target_distance_price,
+    time_block,
+)
 from make_blind_bb_training_sample import NY, PIP, fmt_est, load_5m_bars, load_font, nice_price
 from make_full_rule_test_chart import score_candidates
 
@@ -101,6 +108,7 @@ def trade_variant(
         entry_price = box_mid if variant == "mid" else box_low
     else:
         entry_price = box_mid if variant == "mid" else box_high
+    target_distance = target_distance_price(r_price)
 
     fill = find_limit_fill(window, int(signal["signal_i"]), signal["signal_time"], direction, entry_price)
     base = {
@@ -114,6 +122,8 @@ def trade_variant(
         "box_mid": box_mid,
         "box_bars": int(box["bars"]),
         "box_range_pips": round(r_price / PIP, 2),
+        "target_pips": round(target_distance / PIP, 2),
+        "reward_to_risk": round((target_distance / PIP) / STOP_PIPS, 3),
         "signal_i": int(signal["signal_i"]),
         "signal_time": signal["signal_time"],
         "signal_time_new_york": fmt_est(signal["signal_time"]),
@@ -141,10 +151,10 @@ def trade_variant(
     entry_i, entry_time = fill
     if direction == "long":
         stop_price = entry_price - STOP_PIPS * PIP
-        target_price = entry_price + r_price
+        target_price = entry_price + target_distance
     else:
         stop_price = entry_price + STOP_PIPS * PIP
-        target_price = entry_price - r_price
+        target_price = entry_price - target_distance
 
     resolved = resolve_trade(window, entry_i, entry_price, direction, stop_price, target_price, entry_time)
     return {
@@ -233,7 +243,7 @@ def draw_chart(window: pd.DataFrame, rows: list[dict], day_start_ny: pd.Timestam
     draw.text((left, 38), f"EURUSD Retest Entry Audit | {day_start_ny:%Y-%m-%d %Z}", fill=axis_color, font=title_font)
     draw.text(
         (left, 82),
-        "After breakout: short limits at box mid/high, long limits at box mid/low | 10 pip stop | 1R target",
+        "After breakout: short limits at box mid/high, long limits at box mid/low | 10 pip stop | target = max(box R, stop)",
         fill="#374151",
         font=font,
     )
@@ -353,8 +363,8 @@ def draw_chart(window: pd.DataFrame, rows: list[dict], day_start_ny: pd.Timestam
     draw.ellipse((left + 1100, legend_y + 5, left + 1122, legend_y + 27), outline=red, width=4)
     draw.text((left + 1132, legend_y), "stop exit", fill=axis_color, font=small_font)
 
-    headers = ["Box", "Var", "Filter", "Entry ET", "Dir", "Outcome", "Net", "Block", "Box R", "Bars"]
-    xs = [left, left + 55, left + 120, left + 330, left + 465, left + 545, left + 675, left + 765, left + 930, left + 1035]
+    headers = ["Box", "Var", "Filter", "Entry ET", "Dir", "Outcome", "Net", "Block", "Box R", "Target", "Bars"]
+    xs = [left, left + 55, left + 120, left + 330, left + 465, left + 545, left + 675, left + 765, left + 930, left + 1035, left + 1135]
     draw.text((left, table_top - 40), "Retest entry fills", fill=axis_color, font=label_font)
     for x, header in zip(xs, headers):
         draw.text((x, table_top), header, fill=axis_color, font=small_font)
@@ -372,6 +382,7 @@ def draw_chart(window: pd.DataFrame, rows: list[dict], day_start_ny: pd.Timestam
             f"{row['net_pips']:.1f}",
             row["time_block"],
             f"{row['box_range_pips']:.1f}",
+            f"{row['target_pips']:.1f}",
             row["box_bars"],
         ]
         row_color = red if row["entry_filter"] != "PASS" else axis_color
@@ -438,6 +449,8 @@ def main() -> None:
                 "net_pips",
                 "time_block",
                 "box_range_pips",
+                "target_pips",
+                "reward_to_risk",
                 "box_bars",
             ]
         ].to_string(index=False)

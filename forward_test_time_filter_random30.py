@@ -27,6 +27,11 @@ TIME_BLOCKS = [
 ]
 
 
+def target_distance_price(box_range_price: float) -> float:
+    """Profit target distance cannot be smaller than the stop distance."""
+    return max(float(box_range_price), STOP_PIPS * PIP)
+
+
 def time_block(hour: int) -> str:
     for label, start, end in TIME_BLOCKS:
         if start <= hour < end:
@@ -216,12 +221,13 @@ def trade_from_candidate(
 
     entry_price = float(signal["entry_price"])
     stop_offset = STOP_PIPS * PIP
+    target_distance = target_distance_price(r_price)
     if signal["direction"] == "long":
         stop_price = entry_price - stop_offset
-        target_price = entry_price + r_price
+        target_price = entry_price + target_distance
     else:
         stop_price = entry_price + stop_offset
-        target_price = entry_price - r_price
+        target_price = entry_price - target_distance
 
     reward_pips = abs(target_price - entry_price) / PIP
     if reward_pips <= 0:
@@ -259,6 +265,7 @@ def trade_from_candidate(
         "risk_pips": STOP_PIPS,
         "reward_pips": round(reward_pips, 2),
         "reward_to_risk": round(reward_pips / STOP_PIPS, 3),
+        "target_rule": "max_box_range_or_stop_distance",
         "outcome": resolved["outcome"],
         "exit_time_new_york": fmt_est(resolved["exit_time"]) if not pd.isna(resolved["exit_time"]) else "",
         "exit_price": round(float(resolved["exit_price"]), 5) if not pd.isna(resolved["exit_price"]) else "",
@@ -355,7 +362,7 @@ def draw_results_chart(summary: pd.DataFrame, blocks: pd.DataFrame, out_path: Pa
     draw.text((left, 42), title, fill="#111827", font=title_font)
     draw.text(
         (left, 96),
-        "EURUSD compression breakout | 10 pip stop | 1R target from entry | New York / Toronto Eastern time",
+        "EURUSD compression breakout | 10 pip stop | target = max(box R, stop) | New York / Toronto Eastern time",
         fill="#374151",
         font=subtitle_font,
     )

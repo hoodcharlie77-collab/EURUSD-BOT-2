@@ -8,7 +8,14 @@ from pathlib import Path
 import pandas as pd
 from PIL import Image, ImageDraw
 
-from forward_test_time_filter_random30 import MIN_TRADE_BOX_BARS, STOP_PIPS, SPREAD_PIPS, resolve_trade, time_block
+from forward_test_time_filter_random30 import (
+    MIN_TRADE_BOX_BARS,
+    STOP_PIPS,
+    SPREAD_PIPS,
+    resolve_trade,
+    target_distance_price,
+    time_block,
+)
 from make_blind_bb_training_sample import NY, PIP, fmt_est, load_5m_bars, load_font, nice_price
 from make_full_rule_test_chart import score_candidates
 
@@ -97,12 +104,13 @@ def trade_from_box(window: pd.DataFrame, box: dict, trade_id: int) -> dict | Non
 
     entry_price = float(signal["entry_price"])
     stop_offset = STOP_PIPS * PIP
+    target_distance = target_distance_price(r_price)
     if signal["direction"] == "long":
         stop_price = entry_price - stop_offset
-        target_price = entry_price + r_price
+        target_price = entry_price + target_distance
     else:
         stop_price = entry_price + stop_offset
-        target_price = entry_price - r_price
+        target_price = entry_price - target_distance
 
     resolved = resolve_trade(
         window,
@@ -128,7 +136,7 @@ def trade_from_box(window: pd.DataFrame, box: dict, trade_id: int) -> dict | Non
     if resolved["outcome"] == "target":
         later_1r_note = "target hit"
     elif same_dir_target_after_exit:
-        later_1r_note = "same-dir 1R later"
+        later_1r_note = "same-dir target later"
     elif opposite_1r_after_entry:
         later_1r_note = "opposite 1R later"
     elif any_1r_after_entry:
@@ -156,6 +164,7 @@ def trade_from_box(window: pd.DataFrame, box: dict, trade_id: int) -> dict | Non
         "entry_price": entry_price,
         "stop_price": stop_price,
         "target_price": target_price,
+        "target_pips": round(target_distance / PIP, 2),
         "exit_time": resolved["exit_time"],
         "exit_time_new_york": fmt_est(resolved["exit_time"]) if not pd.isna(resolved["exit_time"]) else "",
         "exit_price": float(resolved["exit_price"]) if not pd.isna(resolved["exit_price"]) else math.nan,
@@ -229,7 +238,7 @@ def draw_chart(window: pd.DataFrame, trades: list[dict], day_start_ny: pd.Timest
     draw.text((left, 38), title, fill=axis_color, font=title_font)
     draw.text(
         (left, 82),
-        "BB(5, 4 std) compression boxes | first breakout close | 10 pip stop | 1R target | red entries are filtered time windows",
+        "BB(5, 4 std) compression boxes | first breakout close | 10 pip stop | target = max(box R, stop)",
         fill="#374151",
         font=font,
     )
@@ -357,7 +366,7 @@ def draw_chart(window: pd.DataFrame, trades: list[dict], day_start_ny: pd.Timest
     draw.text((left + 1182, legend_y), "time exit", fill=axis_color, font=small_font)
 
     # Table.
-    headers = ["#", "Filter", "Time ET", "Dir", "Outcome", "Net pips", "Block", "Bars", "Later 1R"]
+    headers = ["#", "Filter", "Time ET", "Dir", "Outcome", "Net pips", "Block", "Bars", "Later target"]
     xs = [left, left + 45, left + 245, left + 420, left + 500, left + 645, left + 770, left + 935, left + 1015]
     draw.text((left, table_top - 40), "Trade marks", fill=axis_color, font=label_font)
     for x, header in zip(xs, headers):
